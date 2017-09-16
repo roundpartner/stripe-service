@@ -49,7 +49,8 @@ func (rs *RestServer) Charge(w http.ResponseWriter, req *http.Request) {
 	charge, err := charge.New(params)
 
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		InternalError(w, err.Error())
+		return
 	}
 
 	js, _ := json.Marshal(charge)
