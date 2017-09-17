@@ -14,6 +14,10 @@ func InternalError(w http.ResponseWriter, msg string) {
 	jsonError(w, msg, http.StatusInternalServerError)
 }
 
+func BadRequest(w http.ResponseWriter, msg string) {
+	jsonError(w, msg, http.StatusBadRequest)
+}
+
 func jsonError(w http.ResponseWriter, error string, code int) {
 	js, err := json.Marshal(message{Error: error})
 	if err != nil {

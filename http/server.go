@@ -35,8 +35,16 @@ type ChargeRequest struct {
 func (rs *RestServer) Charge(w http.ResponseWriter, req *http.Request) {
 	decoder := json.NewDecoder(req.Body)
 	t := &ChargeRequest{}
-	decoder.Decode(t)
-	defer req.Body.Close()
+	err := decoder.Decode(t)
+	if err != nil {
+		BadRequest(w, err.Error())
+		return
+	}
+
+	if t.Amount < 30 {
+		BadRequest(w, "Amount must be at least 30 pence")
+		return
+	}
 
 	token := t.Token
 	params := &stripe.ChargeParams{
