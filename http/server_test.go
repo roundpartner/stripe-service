@@ -3,7 +3,7 @@ package http
 import (
 	"encoding/json"
 	"github.com/stripe/stripe-go"
-	"github.com/stripe/stripe-go/utils"
+	"github.com/roundpartner/stripe-service/util"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -12,7 +12,7 @@ import (
 
 func TestCharge(t *testing.T) {
 	body := strings.NewReader("{\"token\": \"tok_visa\", \"amount\": 720, \"desc\": \"example\"}")
-	stripe.Key = utils.GetTestKey()
+	stripe.Key = util.GetTestKey()
 	rr := httptest.NewRecorder()
 	req, _ := http.NewRequest("POST", "/charge", body)
 	rs := New()
@@ -47,7 +47,7 @@ func TestCharge(t *testing.T) {
 
 func TestChargeDecimalFails(t *testing.T) {
 	body := strings.NewReader("{\"token\": \"tok_visa\", \"amount\": 999.99, \"desc\": \"example\"}")
-	stripe.Key = utils.GetTestKey()
+	stripe.Key = util.GetTestKey()
 	rr := httptest.NewRecorder()
 	req, _ := http.NewRequest("POST", "/charge", body)
 	rs := New()
@@ -70,7 +70,7 @@ func TestChargeDecimalFails(t *testing.T) {
 
 func TestChargeLowAmountFails(t *testing.T) {
 	body := strings.NewReader("{\"token\": \"tok_visa\", \"amount\": 29, \"desc\": \"example\"}")
-	stripe.Key = utils.GetTestKey()
+	stripe.Key = util.GetTestKey()
 	rr := httptest.NewRecorder()
 	req, _ := http.NewRequest("POST", "/charge", body)
 	rs := New()
