@@ -2,8 +2,8 @@ package http
 
 import (
 	"encoding/json"
-	"github.com/stripe/stripe-go"
 	"github.com/roundpartner/stripe-service/util"
+	"github.com/stripe/stripe-go"
 	"net/http"
 	"net/http/httptest"
 	"strings"

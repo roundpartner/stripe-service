@@ -30,6 +30,7 @@ type ChargeRequest struct {
 	Token  string `json:"token"`
 	Amount uint64 `json:"amount"`
 	Desc   string `json:"desc"`
+	Email  string `json:"receipt_email"`
 }
 
 func (rs *RestServer) Charge(w http.ResponseWriter, req *http.Request) {
@@ -51,6 +52,7 @@ func (rs *RestServer) Charge(w http.ResponseWriter, req *http.Request) {
 		Amount:   t.Amount,
 		Currency: "gbp",
 		Desc:     t.Desc,
+		Email:    t.Email,
 	}
 	params.SetSource(token)
 
