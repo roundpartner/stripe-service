@@ -11,7 +11,7 @@ import (
 )
 
 func TestCharge(t *testing.T) {
-	body := strings.NewReader("{\"token\": \"tok_visa\", \"amount\": 720, \"desc\": \"example\"}")
+	body := strings.NewReader("{\"token\": \"tok_visa\", \"amount\": 720, \"desc\": \"example\", \"trans_id\": \"tnx_1234\", \"business_name\": \"RoundPartner\"}")
 	stripe.Key = util.GetTestKey()
 	rr := httptest.NewRecorder()
 	req, _ := http.NewRequest("POST", "/charge", body)

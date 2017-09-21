@@ -27,10 +27,12 @@ func New() *RestServer {
 }
 
 type ChargeRequest struct {
+	Trans  string `json:"trans_id"`
 	Token  string `json:"token"`
 	Amount uint64 `json:"amount"`
 	Desc   string `json:"desc"`
 	Email  string `json:"receipt_email"`
+	Business  string `json:"business_name"`
 }
 
 func (rs *RestServer) Charge(w http.ResponseWriter, req *http.Request) {
@@ -54,6 +56,8 @@ func (rs *RestServer) Charge(w http.ResponseWriter, req *http.Request) {
 		Desc:     t.Desc,
 		Email:    t.Email,
 	}
+	params.AddMeta("trans_id", t.Trans)
+	params.AddMeta("business_name", t.Business)
 	params.SetSource(token)
 
 	charge, err := charge.New(params)
