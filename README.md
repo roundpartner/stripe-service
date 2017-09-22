@@ -20,3 +20,9 @@ curl -X POST\
     -d "{\"token\": \"tok_visa\", \"amount\": 1000, \"desc\": \"example\"}" \
     http://0.0.0.0:57493/charge
 ```
+## Customer
+### Get
+The customer id will return the customer details
+```bash
+curl http://0.0.0.0:57493/customer/cus_BRsEJtkXRxHxPU
+```

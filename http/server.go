@@ -10,7 +10,10 @@ import (
 
 func ListenAndServe() {
 	rs := New()
-	http.ListenAndServe(":57493", rs.router())
+	err := http.ListenAndServe(":57493", rs.router())
+	if nil != err {
+		panic(err.Error())
+	}
 }
 
 type RestServer struct {
@@ -19,6 +22,7 @@ type RestServer struct {
 func (rs *RestServer) router() *mux.Router {
 	router := mux.NewRouter()
 	router.HandleFunc("/charge", rs.Charge).Methods("POST")
+	router.HandleFunc("/customer/{id}", rs.GetCustomer).Methods("GET")
 	return router
 }
 
