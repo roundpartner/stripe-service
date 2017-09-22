@@ -63,7 +63,7 @@ func (rs *RestServer) Charge(w http.ResponseWriter, req *http.Request) {
 	charge, err := charge.New(params)
 
 	if err != nil {
-		InternalError(w, err.Error())
+		StripeError(w, err.Error())
 		return
 	}
 

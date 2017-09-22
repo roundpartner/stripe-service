@@ -10,6 +10,18 @@ type message struct {
 	Error string `json:"error"`
 }
 
+type messageJson struct {
+	Error interface{} `json:"error"`
+}
+
+func StripeError(w http.ResponseWriter, msg string) {
+	b := bytes.NewBufferString(msg).Bytes()
+	var i interface{}
+	json.Unmarshal(b, &i)
+	js, _ := json.Marshal(messageJson{Error: i})
+	writeJsonError(w, js, http.StatusBadRequest)
+}
+
 func InternalError(w http.ResponseWriter, msg string) {
 	jsonError(w, msg, http.StatusInternalServerError)
 }
