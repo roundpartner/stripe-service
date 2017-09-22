@@ -1,10 +1,10 @@
 package http
 
 import (
-	"net/http"
-	"github.com/stripe/stripe-go/customer"
 	"encoding/json"
 	"github.com/gorilla/mux"
+	"github.com/stripe/stripe-go/customer"
+	"net/http"
 )
 
 func (rs *RestServer) GetCustomer(w http.ResponseWriter, req *http.Request) {

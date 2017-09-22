@@ -1,11 +1,11 @@
 package http
 
 import (
-	"testing"
-	"github.com/stripe/stripe-go"
-	"net/http/httptest"
-	"net/http"
 	"github.com/roundpartner/stripe-service/util"
+	"github.com/stripe/stripe-go"
+	"net/http"
+	"net/http/httptest"
+	"testing"
 )
 
 func TestGetCustomer(t *testing.T) {

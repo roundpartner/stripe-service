@@ -31,12 +31,12 @@ func New() *RestServer {
 }
 
 type ChargeRequest struct {
-	Trans  string `json:"trans_id"`
-	Token  string `json:"token"`
-	Amount uint64 `json:"amount"`
-	Desc   string `json:"desc"`
-	Email  string `json:"receipt_email"`
-	Business  string `json:"business_name"`
+	Trans    string `json:"trans_id"`
+	Token    string `json:"token"`
+	Amount   uint64 `json:"amount"`
+	Desc     string `json:"desc"`
+	Email    string `json:"receipt_email"`
+	Business string `json:"business_name"`
 }
 
 func (rs *RestServer) Charge(w http.ResponseWriter, req *http.Request) {
