@@ -23,6 +23,7 @@ func (rs *RestServer) router() *mux.Router {
 	router := mux.NewRouter()
 	router.HandleFunc("/charge", rs.Charge).Methods("POST")
 	router.HandleFunc("/customer/{id}", rs.GetCustomer).Methods("GET")
+	router.HandleFunc("/customer", rs.NewCustomer).Methods("POST")
 	return router
 }
 
@@ -37,6 +38,7 @@ type ChargeRequest struct {
 	Desc     string `json:"desc"`
 	Email    string `json:"receipt_email"`
 	Business string `json:"business_name"`
+	Customer string `json:"customer"`
 }
 
 func (rs *RestServer) Charge(w http.ResponseWriter, req *http.Request) {
@@ -59,6 +61,7 @@ func (rs *RestServer) Charge(w http.ResponseWriter, req *http.Request) {
 		Currency: "gbp",
 		Desc:     t.Desc,
 		Email:    t.Email,
+		Customer: t.Customer,
 	}
 	params.AddMeta("trans_id", t.Trans)
 	params.AddMeta("business_name", t.Business)
