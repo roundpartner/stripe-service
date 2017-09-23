@@ -6,12 +6,14 @@ import (
 	"github.com/stripe/stripe-go"
 	"github.com/stripe/stripe-go/customer"
 	"net/http"
+	"github.com/stripe/stripe-go/card"
 )
 
 type CustomerRequest struct {
 	Account string `json:"account_id"`
 	Email   string `json:"email"`
 	Desc    string `json:"desc"`
+	Token   string `json:"token"`
 }
 
 func (rs *RestServer) GetCustomer(w http.ResponseWriter, req *http.Request) {
@@ -47,7 +49,18 @@ func (rs *RestServer) NewCustomer(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	js, _ := json.Marshal(customer)
+	card, err := card.New(&stripe.CardParams{
+		Customer: customer.ID,
+		Token: t.Token,
+	})
+
+	if err != nil {
+		StripeError(w, err.Error())
+		return
+	}
+
+	js, _ := json.Marshal(card.Customer)
+
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	w.Write(js)

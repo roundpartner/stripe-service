@@ -26,3 +26,9 @@ The customer id will return the customer details
 ```bash
 curl http://0.0.0.0:57493/customer/cus_BRsEJtkXRxHxPU
 ```
+### Add
+```bash
+curl -X POST \
+    -d "{\"token\": \"tok_gb\", \"account_id\": \"1\", \"email\": \"example@mailinator.com\", \"desc\": \"Added by go test\"}" \
+    http://0.0.0.0:57493/customer
+```
