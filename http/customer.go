@@ -77,7 +77,7 @@ func (rs *RestServer) NewCustomer(w http.ResponseWriter, req *http.Request) {
 		Desc:  t.Desc,
 		Email: t.Email,
 	}
-	customerParams.AddMeta("account_id", t.Account)
+	customerParams.AddMeta("account", t.Account)
 	customer, err := customer.New(customerParams)
 	if err != nil {
 		StripeError(w, err.Error())
