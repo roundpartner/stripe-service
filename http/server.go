@@ -22,6 +22,7 @@ type RestServer struct {
 func (rs *RestServer) router() *mux.Router {
 	router := mux.NewRouter()
 	router.HandleFunc("/charge", rs.Charge).Methods("POST")
+	router.HandleFunc("/customer", rs.Customers).Methods("GET")
 	router.HandleFunc("/customer/{id}", rs.GetCustomer).Methods("GET")
 	router.HandleFunc("/customer", rs.NewCustomer).Methods("POST")
 	return router

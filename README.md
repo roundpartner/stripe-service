@@ -17,10 +17,16 @@ export STRIPE_KEY="your stripe key"
 To take a single payment the charge end point provides this
 ```bash
 curl -X POST\
-    -d "{\"token\": \"tok_visa\", \"amount\": 1000, \"desc\": \"example\"}" \
+    -d "{\"token\": \"tok_gb\", \"amount\": 1000, \"desc\": \"example\"}" \
     http://0.0.0.0:57493/charge
 ```
 ## Customer
+### List
+```bash
+curl -X GET \
+    -d "{\"limit\":\"10\"}" \
+    http://0.0.0.0:57493/customer
+```
 ### Get
 The customer id will return the customer details
 ```bash
@@ -29,6 +35,6 @@ curl http://0.0.0.0:57493/customer/cus_BRsEJtkXRxHxPU
 ### Add
 ```bash
 curl -X POST \
-    -d "{\"token\": \"tok_gb\", \"account_id\": \"1\", \"email\": \"example@mailinator.com\", \"desc\": \"Added by go test\"}" \
+    -d "{\"token\": \"tok_gb\", \"account\": \"1\", \"email\": \"example@mailinator.com\", \"desc\": \"Added by go test\"}" \
     http://0.0.0.0:57493/customer
 ```

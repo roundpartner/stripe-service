@@ -10,10 +10,45 @@ import (
 )
 
 type CustomerRequest struct {
-	Account string `json:"account_id"`
+	Account string `json:"account"`
 	Email   string `json:"email"`
 	Desc    string `json:"desc"`
 	Token   string `json:"token"`
+}
+
+type CustomersRequest struct {
+	Limit string `json:"limit"`
+	After string `json:"after"`
+}
+
+func (rs *RestServer) Customers(w http.ResponseWriter, req *http.Request) {
+	t := &CustomersRequest{Limit: "10"}
+	if req.ContentLength > 0 {
+		decoder := json.NewDecoder(req.Body)
+		err := decoder.Decode(t)
+		if err != nil {
+			BadRequest(w, err.Error())
+			return
+		}
+	}
+
+	params := &stripe.CustomerListParams{}
+	if "" != t.After {
+		params.Filters.AddFilter("starting_after", "", t.After)
+	}
+	if "" != t.Limit {
+		params.Filters.AddFilter("limit", "", t.Limit)
+	}
+	i := customer.List(params)
+	list := stripe.CustomerList{}
+	for i.Next() {
+		list.Values = append(list.Values, i.Customer())
+	}
+
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.WriteHeader(http.StatusOK)
+	js, _ := json.Marshal(list.Values)
+	w.Write(js)
 }
 
 func (rs *RestServer) GetCustomer(w http.ResponseWriter, req *http.Request) {
