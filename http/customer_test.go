@@ -71,7 +71,7 @@ func TestGetCustomer(t *testing.T) {
 }
 
 func TestNewCustomer(t *testing.T) {
-	body := strings.NewReader("{\"token\": \"tok_gb\", \"account_id\": \"1\", \"email\": \"example@mailinator.com\", \"desc\": \"Added by go test\", \"discount\": \"30\"}")
+	body := strings.NewReader("{\"token\": \"tok_gb\", \"account\": \"1\", \"email\": \"example@mailinator.com\", \"desc\": \"Added by go test\", \"discount\": \"30\"}")
 	stripe.Key = util.GetTestKey()
 	rr := httptest.NewRecorder()
 	req, _ := http.NewRequest("POST", "/customer", body)
