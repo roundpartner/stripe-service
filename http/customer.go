@@ -4,16 +4,17 @@ import (
 	"encoding/json"
 	"github.com/gorilla/mux"
 	"github.com/stripe/stripe-go"
+	"github.com/stripe/stripe-go/card"
 	"github.com/stripe/stripe-go/customer"
 	"net/http"
-	"github.com/stripe/stripe-go/card"
 )
 
 type CustomerRequest struct {
-	Account string `json:"account"`
-	Email   string `json:"email"`
-	Desc    string `json:"desc"`
-	Token   string `json:"token"`
+	Account  string `json:"account"`
+	Email    string `json:"email"`
+	Desc     string `json:"desc"`
+	Token    string `json:"token"`
+	Discount string `json:"discount"`
 }
 
 type CustomersRequest struct {
@@ -78,6 +79,7 @@ func (rs *RestServer) NewCustomer(w http.ResponseWriter, req *http.Request) {
 		Email: t.Email,
 	}
 	customerParams.AddMeta("account", t.Account)
+	customerParams.AddMeta("discount", t.Discount)
 	customer, err := customer.New(customerParams)
 	if err != nil {
 		StripeError(w, err.Error())
@@ -86,7 +88,7 @@ func (rs *RestServer) NewCustomer(w http.ResponseWriter, req *http.Request) {
 
 	card, err := card.New(&stripe.CardParams{
 		Customer: customer.ID,
-		Token: t.Token,
+		Token:    t.Token,
 	})
 
 	if err != nil {
