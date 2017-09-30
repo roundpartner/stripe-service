@@ -30,11 +30,17 @@ curl -X GET \
 ### Get
 The customer id will return the customer details
 ```bash
-curl http://0.0.0.0:57493/customer/cus_BRsEJtkXRxHxPU
+curl http://0.0.0.0:57493/customer/cus_BUoP6KtXPL3ajU
 ```
 ### Add
 ```bash
 curl -X POST \
     -d "{\"token\": \"tok_gb\", \"account\": \"1\", \"email\": \"example@mailinator.com\", \"desc\": \"Added by go test\"}" \
     http://0.0.0.0:57493/customer
+```
+### New Default Card
+```bash
+curl -X PUT \
+    -d "{\"token\": \"tok_mastercard_debit\"}" \
+    http://0.0.0.0:57493/customer/cus_BUoP6KtXPL3ajU/card
 ```

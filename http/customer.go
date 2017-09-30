@@ -55,7 +55,7 @@ func (rs *RestServer) Customers(w http.ResponseWriter, req *http.Request) {
 func (rs *RestServer) GetCustomer(w http.ResponseWriter, req *http.Request) {
 	params := mux.Vars(req)
 	id := params["id"]
-	customer, err := customer.Get(id, nil)
+	customer, err := getCustomer(id)
 	if err != nil {
 		StripeError(w, err.Error())
 		return
@@ -64,6 +64,10 @@ func (rs *RestServer) GetCustomer(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	w.Write(js)
+}
+
+func getCustomer(id string) (*stripe.Customer, error) {
+	return customer.Get(id, nil)
 }
 
 func (rs *RestServer) NewCustomer(w http.ResponseWriter, req *http.Request) {
