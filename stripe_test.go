@@ -1,9 +1,9 @@
 package main
 
 import (
-	"testing"
 	"github.com/stripe/stripe-go"
 	"strings"
+	"testing"
 )
 
 func TestInitStrip(t *testing.T) {

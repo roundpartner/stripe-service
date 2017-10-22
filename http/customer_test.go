@@ -96,3 +96,30 @@ func TestNewCustomer(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestNewCustomerWithoutCard(t *testing.T) {
+	body := strings.NewReader("{\"account\": \"1\", \"email\": \"example@mailinator.com\", \"desc\": \"Added by go test\", \"discount\": \"30\"}")
+	stripe.Key = util.GetTestKey()
+	rr := httptest.NewRecorder()
+	req, _ := http.NewRequest("POST", "/customer", body)
+	rs := New()
+	rs.router().ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Errorf("wrong error code returned: %s", rr.Code)
+		t.Fail()
+	}
+
+	if "application/json; charset=utf-8" != rr.Header().Get("Content-Type") {
+		t.Fail()
+	}
+
+	customer := &stripe.Customer{}
+	decoder := json.NewDecoder(rr.Body)
+	err := decoder.Decode(customer)
+	if nil != err {
+		t.Error(err.Error())
+		t.Error(rr.Body.String())
+		t.Fail()
+	}
+}

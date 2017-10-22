@@ -84,14 +84,22 @@ func (rs *RestServer) NewCustomer(w http.ResponseWriter, req *http.Request) {
 	}
 	customerParams.AddMeta("account", t.Account)
 	customerParams.AddMeta("discount", t.Discount)
-	customer, err := customer.New(customerParams)
+	newCustomer, err := customer.New(customerParams)
 	if err != nil {
 		StripeError(w, err.Error())
 		return
 	}
 
+	if "" == t.Token {
+		js, _ := json.Marshal(newCustomer)
+
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		w.WriteHeader(http.StatusOK)
+		w.Write(js)
+	}
+
 	card, err := card.New(&stripe.CardParams{
-		Customer: customer.ID,
+		Customer: newCustomer.ID,
 		Token:    t.Token,
 	})
 
