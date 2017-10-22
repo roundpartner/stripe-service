@@ -96,6 +96,7 @@ func (rs *RestServer) NewCustomer(w http.ResponseWriter, req *http.Request) {
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(http.StatusOK)
 		w.Write(js)
+		return
 	}
 
 	card, err := card.New(&stripe.CardParams{
