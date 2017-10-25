@@ -10,8 +10,39 @@ import (
 	"testing"
 )
 
+func TestNewCustomerParam(t *testing.T) {
+	cr := &CustomerRequest{
+		Desc: "Description",
+		Email: "Email@Address.com",
+		Account: "123",
+		User: "456",
+		Discount: "78",
+	}
+	c := NewCustomerParam(cr)
+
+	if "Description" != c.Desc {
+		t.FailNow()
+	}
+
+	if "Email@Address.com" != c.Email {
+		t.FailNow()
+	}
+
+	if "123" != c.Meta["account"] {
+		t.FailNow()
+	}
+
+	if "456" != c.Meta["user"] {
+		t.FailNow()
+	}
+
+	if "78" != c.Meta["discount"] {
+		t.FailNow()
+	}
+}
+
 func TestCustomers(t *testing.T) {
-	body := strings.NewReader("{\"limit\": \"1\"}")
+	body := strings.NewReader("{\"limit\": \"100\"}")
 	stripe.Key = util.GetTestKey()
 	rr := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/customer", body)
@@ -20,11 +51,11 @@ func TestCustomers(t *testing.T) {
 
 	if rr.Code != http.StatusOK {
 		t.Errorf("wrong error code returned: %s", rr.Code)
-		t.Fail()
+		t.FailNow()
 	}
 
 	if "application/json; charset=utf-8" != rr.Header().Get("Content-Type") {
-		t.Fail()
+		t.FailNow()
 	}
 
 	customer := &stripe.CustomerList{}
@@ -33,10 +64,10 @@ func TestCustomers(t *testing.T) {
 	if nil != err {
 		t.Error(err.Error())
 		t.Error(rr.Body.String())
-		t.Fail()
+		t.FailNow()
 	}
 
-	if len(customer.Values) != 1 {
+	if len(customer.Values) == 0 {
 		t.Skipf("%d values returned instead of 1", len(customer.Values))
 	}
 
@@ -52,11 +83,11 @@ func TestGetCustomer(t *testing.T) {
 
 	if rr.Code != http.StatusOK {
 		t.Errorf("wrong error code returned: %s", rr.Code)
-		t.Fail()
+		t.FailNow()
 	}
 
 	if "application/json; charset=utf-8" != rr.Header().Get("Content-Type") {
-		t.Fail()
+		t.FailNow()
 	}
 
 	customer := &stripe.Customer{}
@@ -65,13 +96,13 @@ func TestGetCustomer(t *testing.T) {
 	if nil != err {
 		t.Error(err.Error())
 		t.Error(rr.Body.String())
-		t.Fail()
+		t.FailNow()
 	}
 
 }
 
 func TestNewCustomer(t *testing.T) {
-	body := strings.NewReader("{\"token\": \"tok_gb\", \"account\": \"123\", \"user\": \"456\", \"email\": \"example@mailinator.com\", \"desc\": \"Added by go test\", \"discount\": \"30\"}")
+	body := strings.NewReader("{\"token\": \"tok_gb\", \"account\": \"123\", \"user\": \"456\", \"email\": \"gotest@mailinator.com\", \"desc\": \"Added by go test\", \"discount\": \"30\"}")
 	stripe.Key = util.GetTestKey()
 	rr := httptest.NewRecorder()
 	req, _ := http.NewRequest("POST", "/customer", body)
@@ -80,11 +111,11 @@ func TestNewCustomer(t *testing.T) {
 
 	if rr.Code != http.StatusOK {
 		t.Errorf("wrong error code returned: %s", rr.Code)
-		t.Fail()
+		t.FailNow()
 	}
 
 	if "application/json; charset=utf-8" != rr.Header().Get("Content-Type") {
-		t.Fail()
+		t.FailNow()
 	}
 
 	customer := &stripe.Customer{}
@@ -93,12 +124,14 @@ func TestNewCustomer(t *testing.T) {
 	if nil != err {
 		t.Error(err.Error())
 		t.Error(rr.Body.String())
-		t.Fail()
+		t.FailNow()
 	}
+
+	delete(customer.ID)
 }
 
 func TestNewCustomerWithoutCard(t *testing.T) {
-	body := strings.NewReader("{\"account\": \"123\", \"user\": \"456\", \"email\": \"example@mailinator.com\", \"desc\": \"Added by go test\", \"discount\": \"30\"}")
+	body := strings.NewReader("{\"account\": \"123\", \"user\": \"456\", \"email\": \"gotest@mailinator.com\", \"desc\": \"Added by go test\", \"discount\": \"30\"}")
 	stripe.Key = util.GetTestKey()
 	rr := httptest.NewRecorder()
 	req, _ := http.NewRequest("POST", "/customer", body)
@@ -107,11 +140,11 @@ func TestNewCustomerWithoutCard(t *testing.T) {
 
 	if rr.Code != http.StatusOK {
 		t.Errorf("wrong error code returned: %s", rr.Code)
-		t.Fail()
+		t.FailNow()
 	}
 
 	if "application/json; charset=utf-8" != rr.Header().Get("Content-Type") {
-		t.Fail()
+		t.FailNow()
 	}
 
 	customer := &stripe.Customer{}
@@ -120,6 +153,8 @@ func TestNewCustomerWithoutCard(t *testing.T) {
 	if nil != err {
 		t.Error(err.Error())
 		t.Error(rr.Body.String())
-		t.Fail()
+		t.FailNow()
 	}
+
+	delete(customer.ID)
 }

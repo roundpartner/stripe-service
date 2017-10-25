@@ -24,7 +24,7 @@ type CustomersRequest struct {
 }
 
 func (rs *RestServer) Customers(w http.ResponseWriter, req *http.Request) {
-	t := &CustomersRequest{Limit: "10"}
+	t := &CustomersRequest{Limit: "100"}
 	if req.ContentLength > 0 {
 		decoder := json.NewDecoder(req.Body)
 		err := decoder.Decode(t)
@@ -71,6 +71,17 @@ func getCustomer(id string) (*stripe.Customer, error) {
 	return customer.Get(id, nil)
 }
 
+func NewCustomerParam(t *CustomerRequest) *stripe.CustomerParams {
+	customerParams := &stripe.CustomerParams{
+		Desc:  t.Desc,
+		Email: t.Email,
+	}
+	customerParams.AddMeta("account", t.Account)
+	customerParams.AddMeta("user", t.User)
+	customerParams.AddMeta("discount", t.Discount)
+	return customerParams
+}
+
 func (rs *RestServer) NewCustomer(w http.ResponseWriter, req *http.Request) {
 	decoder := json.NewDecoder(req.Body)
 	t := &CustomerRequest{}
@@ -79,13 +90,8 @@ func (rs *RestServer) NewCustomer(w http.ResponseWriter, req *http.Request) {
 		BadRequest(w, err.Error())
 		return
 	}
-	customerParams := &stripe.CustomerParams{
-		Desc:  t.Desc,
-		Email: t.Email,
-	}
-	customerParams.AddMeta("account", t.Account)
-	customerParams.AddMeta("user", t.User)
-	customerParams.AddMeta("discount", t.Discount)
+
+	customerParams := NewCustomerParam(t)
 	newCustomer, err := customer.New(customerParams)
 	if err != nil {
 		StripeError(w, err.Error())
@@ -116,4 +122,12 @@ func (rs *RestServer) NewCustomer(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	w.Write(js)
+}
+
+func delete(id string) bool {
+	_, err := customer.Del(id, nil)
+	if nil != err {
+		return false
+	}
+	return true
 }

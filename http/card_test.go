@@ -14,7 +14,7 @@ func TestRestServer_UpdateCustomerCard(t *testing.T) {
 	body := strings.NewReader("{\"token\": \"tok_mastercard\"}")
 	stripe.Key = util.GetTestKey()
 	rr := httptest.NewRecorder()
-	req, _ := http.NewRequest("PUT", "/customer/cus_BUn5fLay0cMkMw/card", body)
+	req, _ := http.NewRequest("PUT", "/customer/cus_BTPXNNELVkvpgG/card", body)
 	rs := New()
 	rs.router().ServeHTTP(rr, req)
 
