@@ -11,6 +11,7 @@ import (
 
 type CustomerRequest struct {
 	Account  string `json:"account"`
+	User     string `json:"user"`
 	Email    string `json:"email"`
 	Desc     string `json:"desc"`
 	Token    string `json:"token"`
@@ -83,6 +84,7 @@ func (rs *RestServer) NewCustomer(w http.ResponseWriter, req *http.Request) {
 		Email: t.Email,
 	}
 	customerParams.AddMeta("account", t.Account)
+	customerParams.AddMeta("user", t.User)
 	customerParams.AddMeta("discount", t.Discount)
 	newCustomer, err := customer.New(customerParams)
 	if err != nil {
