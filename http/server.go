@@ -6,13 +6,28 @@ import (
 	"github.com/stripe/stripe-go"
 	"github.com/stripe/stripe-go/charge"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"fmt"
 )
 
 func ListenAndServe() {
 	rs := New()
-	err := http.ListenAndServe(":57493", rs.router())
+	server := &http.Server{Addr: ":57493", Handler: rs.router()}
+
+	go func() {
+		c := make(chan os.Signal, 1)
+		signal.Notify(c, syscall.SIGTERM)
+		<-c
+		signal.Stop(c)
+		fmt.Println("http: Server shutting down gracefully")
+		server.Shutdown(nil)
+	}()
+
+	err := server.ListenAndServe()
 	if nil != err {
-		panic(err.Error())
+		fmt.Println(err.Error())
 	}
 }
 
