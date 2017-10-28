@@ -25,6 +25,7 @@ func ListenAndServe() {
 		server.Shutdown(nil)
 	}()
 
+	fmt.Println("http: Server starting")
 	err := server.ListenAndServe()
 	if nil != err {
 		fmt.Println(err.Error())
