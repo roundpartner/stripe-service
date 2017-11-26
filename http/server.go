@@ -9,7 +9,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
-	"fmt"
+	"log"
 )
 
 func ListenAndServe() {
@@ -21,14 +21,14 @@ func ListenAndServe() {
 		signal.Notify(c, syscall.SIGTERM)
 		<-c
 		signal.Stop(c)
-		fmt.Println("http: Server shutting down gracefully")
+		log.Println("Server shutting down gracefully")
 		server.Shutdown(nil)
 	}()
 
-	fmt.Println("http: Server starting")
+	log.Println("Server starting")
 	err := server.ListenAndServe()
 	if nil != err {
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 	}
 }
 
