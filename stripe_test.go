@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestInitStrip(t *testing.T) {
+func TestInitStripe(t *testing.T) {
 	if initStripe(); !strings.HasPrefix(stripe.Key, "sk_test_") {
 		t.Fail()
 	}

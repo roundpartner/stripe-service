@@ -6,6 +6,14 @@ import (
 	"testing"
 )
 
+func TestStripeError(t *testing.T) {
+	rr := httptest.NewRecorder()
+	StripeError(rr, "Testing Stripe Error")
+	if http.StatusBadRequest != rr.Code {
+		t.Fail()
+	}
+}
+
 func TestInternalError(t *testing.T) {
 	rr := httptest.NewRecorder()
 	InternalError(rr, "Testing Error")
