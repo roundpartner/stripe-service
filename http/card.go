@@ -18,10 +18,15 @@ func (rs *RestServer) UpdateCustomerCard(w http.ResponseWriter, req *http.Reques
 	id := params["id"]
 
 	decoder := json.NewDecoder(req.Body)
-	t := &CardRequest{}
-	err := decoder.Decode(t)
+	cardRequest := &CardRequest{}
+	err := decoder.Decode(cardRequest)
 	if err != nil {
 		BadRequest(w, err.Error())
+		return
+	}
+
+	if "" == cardRequest.Token {
+		BadRequest(w, "token is required in this request")
 		return
 	}
 
@@ -33,7 +38,7 @@ func (rs *RestServer) UpdateCustomerCard(w http.ResponseWriter, req *http.Reques
 
 	crd, err := card.New(&stripe.CardParams{
 		Customer: c.ID,
-		Token:    t.Token,
+		Token:    cardRequest.Token,
 	})
 
 	if err != nil {
