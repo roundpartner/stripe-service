@@ -1,13 +1,13 @@
 package http
 
 import (
-	"testing"
-	"strings"
-	"github.com/stripe/stripe-go"
-	"net/http/httptest"
-	"net/http"
-	"github.com/roundpartner/stripe-service/util"
 	"encoding/json"
+	"github.com/roundpartner/stripe-service/util"
+	"github.com/stripe/stripe-go"
+	"net/http"
+	"net/http/httptest"
+	"strings"
+	"testing"
 )
 
 func TestRestServer_UpdateCustomerCard(t *testing.T) {

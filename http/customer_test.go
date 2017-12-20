@@ -12,10 +12,10 @@ import (
 
 func TestNewCustomerParam(t *testing.T) {
 	cr := &CustomerRequest{
-		Desc: "Description",
-		Email: "Email@Address.com",
-		Account: "123",
-		User: "456",
+		Desc:     "Description",
+		Email:    "Email@Address.com",
+		Account:  "123",
+		User:     "456",
 		Discount: "78",
 	}
 	c := NewCustomerParam(cr)

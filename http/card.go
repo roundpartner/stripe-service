@@ -1,16 +1,16 @@
 package http
 
 import (
-	"net/http"
-	"github.com/gorilla/mux"
 	"encoding/json"
-	"github.com/stripe/stripe-go/card"
+	"github.com/gorilla/mux"
 	"github.com/stripe/stripe-go"
+	"github.com/stripe/stripe-go/card"
 	"github.com/stripe/stripe-go/customer"
+	"net/http"
 )
 
 type CardRequest struct {
-	Token    string `json:"token"`
+	Token string `json:"token"`
 }
 
 func (rs *RestServer) UpdateCustomerCard(w http.ResponseWriter, req *http.Request) {

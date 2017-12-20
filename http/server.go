@@ -5,25 +5,15 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/stripe/stripe-go"
 	"github.com/stripe/stripe-go/charge"
-	"net/http"
-	"os"
-	"os/signal"
-	"syscall"
 	"log"
+	"net/http"
 )
 
 func ListenAndServe() {
 	rs := New()
 	server := &http.Server{Addr: ":57493", Handler: rs.router()}
 
-	go func() {
-		c := make(chan os.Signal, 1)
-		signal.Notify(c, syscall.SIGTERM)
-		<-c
-		signal.Stop(c)
-		log.Println("Server shutting down gracefully")
-		server.Shutdown(nil)
-	}()
+	ShutdownGracefully(server)
 
 	log.Println("Server starting")
 	err := server.ListenAndServe()
