@@ -8,6 +8,7 @@ import (
 	"github.com/stripe/stripe-go/customer"
 	"log"
 	"net/http"
+	"sync"
 )
 
 type CustomerRequest struct {
@@ -161,11 +162,36 @@ func loadCustomers() {
 			log.Printf("Customer %s does not have user set", list.Customer().ID)
 			continue
 		}
+		if get(list.Customer().Meta["account"]) == nil {
+			log.Printf("Customer %s is a duplicate", list.Customer().ID)
+			continue
+		}
 		cm := &CustomerMeta{
 			list.Customer().Meta["account"],
 			list.Customer().Meta["user"],
 			list.Customer().DefaultSource.ID,
 		}
-		customerMetaList[list.Customer().Meta["account"]] = cm
+		add(cm)
 	}
+}
+
+var customerMutex = struct{
+	sync.RWMutex
+	customers map[string]*CustomerMeta
+}{customers: make(map[string]*CustomerMeta)}
+
+func get(id string) *CustomerMeta {
+	customerMutex.RLock()
+	c, ok := customerMetaList[id]
+	customerMutex.RUnlock()
+	if ok == false {
+		return nil
+	}
+	return c
+}
+
+func add(c *CustomerMeta) {
+	customerMutex.Lock()
+	customerMetaList[c.Account] = c
+	customerMutex.Unlock()
 }
