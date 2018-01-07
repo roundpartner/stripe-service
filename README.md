@@ -44,3 +44,7 @@ curl -X PUT \
     -d "{\"token\": \"tok_mastercard_debit\"}" \
     http://0.0.0.0:57493/customer/cus_BUoP6KtXPL3ajU/card
 ```
+### Reload
+```bash
+curl http://0.0.0.0:57493/reload
+```

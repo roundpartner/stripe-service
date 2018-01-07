@@ -6,6 +6,7 @@ import (
 	"github.com/stripe/stripe-go"
 	"github.com/stripe/stripe-go/card"
 	"github.com/stripe/stripe-go/customer"
+	"log"
 	"net/http"
 )
 
@@ -130,4 +131,41 @@ func delete(id string) bool {
 		return false
 	}
 	return true
+}
+
+type CustomerMeta struct {
+	Account string `json:"account"`
+	User    string `json:"user"`
+	Token   string `json:"token"`
+}
+
+var customerMetaList map[string]*CustomerMeta
+
+func (rs *RestServer) ReloadCustomers(w http.ResponseWriter, req *http.Request) {
+	loadCustomers()
+
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.WriteHeader(http.StatusNoContent)
+}
+
+func loadCustomers() {
+	customerMetaList = make(map[string]*CustomerMeta)
+	params := &stripe.CustomerListParams{}
+	list := customer.List(params)
+	for list.Next() {
+		if "" == list.Customer().Meta["account"] {
+			log.Printf("Customer %s does not have account set", list.Customer().ID)
+			continue
+		}
+		if "" == list.Customer().Meta["user"] {
+			log.Printf("Customer %s does not have user set", list.Customer().ID)
+			continue
+		}
+		cm := &CustomerMeta{
+			list.Customer().Meta["account"],
+			list.Customer().Meta["user"],
+			list.Customer().DefaultSource.ID,
+		}
+		customerMetaList[list.Customer().Meta["account"]] = cm
+	}
 }

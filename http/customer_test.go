@@ -158,3 +158,20 @@ func TestNewCustomerWithoutCard(t *testing.T) {
 
 	delete(customer.ID)
 }
+
+func TestReloadCustomers(t *testing.T) {
+	stripe.Key = util.GetTestKey()
+	rr := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/reload", nil)
+	rs := New()
+	rs.router().ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusNoContent {
+		t.Errorf("wrong error code returned: %s", rr.Code)
+	}
+
+	if "application/json; charset=utf-8" != rr.Header().Get("Content-Type") {
+		t.Errorf("wrong content type returned: %s", rr.Header().Get("Content-Type"))
+		t.FailNow()
+	}
+}
