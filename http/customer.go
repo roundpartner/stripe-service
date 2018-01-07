@@ -6,7 +6,9 @@ import (
 	"github.com/stripe/stripe-go"
 	"github.com/stripe/stripe-go/card"
 	"github.com/stripe/stripe-go/customer"
+	"log"
 	"net/http"
+	"strconv"
 )
 
 type CustomerRequest struct {
@@ -22,6 +24,14 @@ type CustomersRequest struct {
 	Limit string `json:"limit"`
 	After string `json:"after"`
 }
+
+type CustomerMeta struct {
+	Account string `json:"account"`
+	User    string `json:"user"`
+	Token   string `json:"token"`
+}
+
+var customerMetaList []*CustomerMeta
 
 func (rs *RestServer) Customers(w http.ResponseWriter, req *http.Request) {
 	t := &CustomersRequest{Limit: "100"}
@@ -130,4 +140,27 @@ func delete(id string) bool {
 		return false
 	}
 	return true
+}
+
+func (rs *RestServer) ReloadCustomers(w http.ResponseWriter, req *http.Request) {
+	params := &stripe.CustomerListParams{}
+	list := customer.List(params)
+	for list.Next() {
+		if "" == list.Customer().Meta["account"] {
+			log.Printf("Customer %s does not have account set", list.Customer().ID)
+		}
+		if "" == list.Customer().Meta["user"] {
+			log.Printf("Customer %s does not have user set", list.Customer().ID)
+		}
+		if s, err := strconv.ParseInt(list.Customer().Meta["account"], 10, 32); err == nil {
+			customerMetaList[s] = &CustomerMeta{
+				list.Customer().Meta["account"],
+				list.Customer().Meta["user"],
+				list.Customer().DefaultSource.ID,
+			}
+		}
+	}
+
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.WriteHeader(http.StatusOK)
 }
