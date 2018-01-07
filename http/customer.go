@@ -136,7 +136,6 @@ func delete(id string) bool {
 
 type CustomerMeta struct {
 	Account string `json:"account"`
-	User    string `json:"user"`
 	Token   string `json:"token"`
 }
 
@@ -158,17 +157,12 @@ func loadCustomers() {
 			log.Printf("Customer %s does not have account set", list.Customer().ID)
 			continue
 		}
-		if "" == list.Customer().Meta["user"] {
-			log.Printf("Customer %s does not have user set", list.Customer().ID)
-			continue
-		}
 		if get(list.Customer().Meta["account"]) != nil {
 			log.Printf("Customer %s is a duplicate", list.Customer().ID)
 			continue
 		}
 		cm := &CustomerMeta{
 			list.Customer().Meta["account"],
-			list.Customer().Meta["user"],
 			list.Customer().DefaultSource.ID,
 		}
 		add(cm)
