@@ -162,7 +162,7 @@ func loadCustomers() {
 			log.Printf("Customer %s does not have user set", list.Customer().ID)
 			continue
 		}
-		if get(list.Customer().Meta["account"]) == nil {
+		if get(list.Customer().Meta["account"]) != nil {
 			log.Printf("Customer %s is a duplicate", list.Customer().ID)
 			continue
 		}
