@@ -142,6 +142,13 @@ type CustomerMeta struct {
 var customerMetaList map[string]*CustomerMeta
 
 func (rs *RestServer) ReloadCustomers(w http.ResponseWriter, req *http.Request) {
+	loadCustomers()
+
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.WriteHeader(http.StatusNoContent)
+}
+
+func loadCustomers() {
 	customerMetaList = make(map[string]*CustomerMeta)
 	params := &stripe.CustomerListParams{}
 	list := customer.List(params)
@@ -161,7 +168,4 @@ func (rs *RestServer) ReloadCustomers(w http.ResponseWriter, req *http.Request) 
 		}
 		customerMetaList[list.Customer().Meta["account"]] = cm
 	}
-
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	w.WriteHeader(http.StatusOK)
 }

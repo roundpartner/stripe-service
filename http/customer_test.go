@@ -166,7 +166,7 @@ func TestReloadCustomers(t *testing.T) {
 	rs := New()
 	rs.router().ServeHTTP(rr, req)
 
-	if rr.Code != http.StatusOK {
+	if rr.Code != http.StatusNoContent {
 		t.Errorf("wrong error code returned: %s", rr.Code)
 	}
 
