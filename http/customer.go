@@ -134,6 +134,31 @@ func delete(id string) bool {
 	return true
 }
 
+func (rs *RestServer) UpdateCustomer(w http.ResponseWriter, req *http.Request) {
+	params := mux.Vars(req)
+	id := params["id"]
+
+	decoder := json.NewDecoder(req.Body)
+	t := &CustomerRequest{}
+	err := decoder.Decode(t)
+	if err != nil {
+		BadRequest(w, err.Error())
+		return
+	}
+
+	customerParams := NewCustomerParam(t)
+	updatedCustomer, err := customer.Update(id, customerParams)
+	if err != nil {
+		StripeError(w, err.Error())
+		return
+	}
+
+	js, _ := json.Marshal(updatedCustomer)
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.WriteHeader(http.StatusOK)
+	w.Write(js)
+}
+
 type CustomerMeta struct {
 	Account string `json:"account"`
 	Token   string `json:"token"`
@@ -169,7 +194,7 @@ func loadCustomers() {
 	}
 }
 
-var customerMutex = struct{
+var customerMutex = struct {
 	sync.RWMutex
 	customers map[string]*CustomerMeta
 }{customers: make(map[string]*CustomerMeta)}

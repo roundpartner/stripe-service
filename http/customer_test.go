@@ -159,6 +159,33 @@ func TestNewCustomerWithoutCard(t *testing.T) {
 	delete(customer.ID)
 }
 
+func TestUpdateCustomer(t *testing.T) {
+	stripe.Key = util.GetTestKey()
+	body := strings.NewReader("{\"email\": \"gotest@mailinator.com\"}")
+	rr := httptest.NewRecorder()
+	req, _ := http.NewRequest("PUT", "/customer/cus_C3MQXNRknd5e6p", body)
+	rs := New()
+	rs.router().ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Errorf("wrong error code returned: %s", rr.Code)
+	}
+
+	if "application/json; charset=utf-8" != rr.Header().Get("Content-Type") {
+		t.Errorf("wrong content type returned: %s", rr.Header().Get("Content-Type"))
+		t.FailNow()
+	}
+
+	customer := &stripe.Customer{}
+	decoder := json.NewDecoder(rr.Body)
+	err := decoder.Decode(customer)
+	if nil != err {
+		t.Error(err.Error())
+		t.Error(rr.Body.String())
+		t.FailNow()
+	}
+}
+
 func TestReloadCustomers(t *testing.T) {
 	stripe.Key = util.GetTestKey()
 	rr := httptest.NewRecorder()
