@@ -61,7 +61,7 @@ func TestChargeDecimalFails(t *testing.T) {
 		t.Fail()
 	}
 
-	if "{\"error\":\"json: cannot unmarshal number 999.99 into Go struct field ChargeRequest.amount of type uint64\"}" != rr.Body.String() {
+	if "{\"error\":\"json: cannot unmarshal number 999.99 into Go struct field ChargeRequest.amount of type int64\"}" != rr.Body.String() {
 		t.Error(rr.Body.String())
 		t.Fail()
 	}
@@ -99,25 +99,26 @@ func TestChargeCustomerFails(t *testing.T) {
 	rs.router().ServeHTTP(rr, req)
 
 	if rr.Code != http.StatusBadRequest {
-		t.Fail()
+		t.Error("prefix not matched: ", rr.Body.String())
+		t.FailNow()
 	}
 
 	if "application/json; charset=utf-8" != rr.Header().Get("Content-Type") {
-		t.Fail()
+		t.FailNow()
 	}
 
 	if !strings.HasPrefix(rr.Body.String(), "{\"error\":{\"charge\"") {
 		t.Error("prefix not matched: ", rr.Body.String())
-		t.Fail()
+		t.FailNow()
 	}
 
 	if !strings.Contains(rr.Body.String(), "\"code\":\"card_declined\",\"message\":\"Your card was declined.\"") {
 		t.Error("contains not matched: ", rr.Body.String())
-		t.Fail()
+		t.FailNow()
 	}
 
 	if !strings.HasSuffix(rr.Body.String(), "\"type\":\"card_error\"}}") {
 		t.Error("suffix not matched: ", rr.Body.String())
-		t.Fail()
+		t.FailNow()
 	}
 }

@@ -73,8 +73,12 @@ func (rs *RestServer) Charge(w http.ResponseWriter, req *http.Request) {
 		Amount:   &t.Amount,
 		Currency: &t.Currency,
 		Description:     &t.Desc,
-		ReceiptEmail:    &t.Email,
-		Customer: &t.Customer,
+	}
+	if "" != t.Customer {
+		params.Customer = &t.Customer
+	}
+	if "" != t.Email {
+		params.ReceiptEmail = &t.Email
 	}
 	params.AddMetadata("trans_id", t.Trans)
 	params.AddMetadata("business_name", t.Business)
