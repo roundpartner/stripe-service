@@ -20,23 +20,23 @@ func TestNewCustomerParam(t *testing.T) {
 	}
 	c := NewCustomerParam(cr)
 
-	if "Description" != c.Desc {
+	if "Description" != *c.Description {
 		t.FailNow()
 	}
 
-	if "Email@Address.com" != c.Email {
+	if "Email@Address.com" != *c.Email {
 		t.FailNow()
 	}
 
-	if "123" != c.Meta["account"] {
+	if "123" != c.Metadata["account"] {
 		t.FailNow()
 	}
 
-	if "456" != c.Meta["user"] {
+	if "456" != c.Metadata["user"] {
 		t.FailNow()
 	}
 
-	if "78" != c.Meta["discount"] {
+	if "78" != c.Metadata["discount"] {
 		t.FailNow()
 	}
 }
@@ -60,15 +60,15 @@ func TestCustomers(t *testing.T) {
 
 	customer := &stripe.CustomerList{}
 	decoder := json.NewDecoder(rr.Body)
-	err := decoder.Decode(&customer.Values)
+	err := decoder.Decode(&customer.Data)
 	if nil != err {
 		t.Error(err.Error())
 		t.Error(rr.Body.String())
 		t.FailNow()
 	}
 
-	if len(customer.Values) == 0 {
-		t.Skipf("%d values returned instead of 1", len(customer.Values))
+	if len(customer.Data) == 0 {
+		t.Skipf("%d values returned instead of 1", len(customer.Data))
 	}
 
 	t.Log(rr.Body.String())
