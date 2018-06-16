@@ -37,8 +37,8 @@ func (rs *RestServer) UpdateCustomerCard(w http.ResponseWriter, req *http.Reques
 	}
 
 	crd, err := card.New(&stripe.CardParams{
-		Customer: c.ID,
-		Token:    cardRequest.Token,
+		Customer: &c.ID,
+		Token:    &cardRequest.Token,
 	})
 
 	if err != nil {
@@ -47,7 +47,7 @@ func (rs *RestServer) UpdateCustomerCard(w http.ResponseWriter, req *http.Reques
 	}
 
 	customerParams := &stripe.CustomerParams{
-		DefaultSource: crd.ID,
+		DefaultSource: &crd.ID,
 	}
 	customer, err := customer.Update(
 		id,

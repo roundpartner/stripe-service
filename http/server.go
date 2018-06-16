@@ -44,16 +44,19 @@ func New() *RestServer {
 type ChargeRequest struct {
 	Trans    string `json:"trans_id"`
 	Token    string `json:"token"`
-	Amount   uint64 `json:"amount"`
+	Amount   int64 `json:"amount"`
 	Desc     string `json:"desc"`
 	Email    string `json:"receipt_email"`
 	Business string `json:"business_name"`
 	Customer string `json:"customer"`
+	Currency string
 }
 
 func (rs *RestServer) Charge(w http.ResponseWriter, req *http.Request) {
 	decoder := json.NewDecoder(req.Body)
-	t := &ChargeRequest{}
+	t := &ChargeRequest{
+		Currency: "gbp",
+	}
 	err := decoder.Decode(t)
 	if err != nil {
 		BadRequest(w, err.Error())
@@ -67,14 +70,14 @@ func (rs *RestServer) Charge(w http.ResponseWriter, req *http.Request) {
 
 	token := t.Token
 	params := &stripe.ChargeParams{
-		Amount:   t.Amount,
-		Currency: "gbp",
-		Desc:     t.Desc,
-		Email:    t.Email,
-		Customer: t.Customer,
+		Amount:   &t.Amount,
+		Currency: &t.Currency,
+		Description:     &t.Desc,
+		ReceiptEmail:    &t.Email,
+		Customer: &t.Customer,
 	}
-	params.AddMeta("trans_id", t.Trans)
-	params.AddMeta("business_name", t.Business)
+	params.AddMetadata("trans_id", t.Trans)
+	params.AddMetadata("business_name", t.Business)
 	params.SetSource(token)
 
 	charge, err := charge.New(params)

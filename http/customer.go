@@ -46,12 +46,12 @@ func (rs *RestServer) Customers(w http.ResponseWriter, req *http.Request) {
 	i := customer.List(params)
 	list := stripe.CustomerList{}
 	for i.Next() {
-		list.Values = append(list.Values, i.Customer())
+		list.Data = append(list.Data, i.Customer())
 	}
 
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
-	js, _ := json.Marshal(list.Values)
+	js, _ := json.Marshal(list.Data)
 	w.Write(js)
 }
 
@@ -75,12 +75,12 @@ func getCustomer(id string) (*stripe.Customer, error) {
 
 func NewCustomerParam(t *CustomerRequest) *stripe.CustomerParams {
 	customerParams := &stripe.CustomerParams{
-		Desc:  t.Desc,
-		Email: t.Email,
+		Description: &t.Desc,
+		Email: &t.Email,
 	}
-	customerParams.AddMeta("account", t.Account)
-	customerParams.AddMeta("user", t.User)
-	customerParams.AddMeta("discount", t.Discount)
+	customerParams.AddMetadata("account", t.Account)
+	customerParams.AddMetadata("user", t.User)
+	customerParams.AddMetadata("discount", t.Discount)
 	return customerParams
 }
 
@@ -110,8 +110,8 @@ func (rs *RestServer) NewCustomer(w http.ResponseWriter, req *http.Request) {
 	}
 
 	card, err := card.New(&stripe.CardParams{
-		Customer: newCustomer.ID,
-		Token:    t.Token,
+		Customer: &newCustomer.ID,
+		Token:    &t.Token,
 	})
 
 	if err != nil {
@@ -178,16 +178,16 @@ func loadCustomers() {
 	params := &stripe.CustomerListParams{}
 	list := customer.List(params)
 	for list.Next() {
-		if "" == list.Customer().Meta["account"] {
+		if "" == list.Customer().Metadata["account"] {
 			log.Printf("Customer %s does not have account set", list.Customer().ID)
 			continue
 		}
-		if get(list.Customer().Meta["account"]) != nil {
+		if get(list.Customer().Metadata["account"]) != nil {
 			log.Printf("Customer %s is a duplicate", list.Customer().ID)
 			continue
 		}
 		cm := &CustomerMeta{
-			list.Customer().Meta["account"],
+			list.Customer().Metadata["account"],
 			list.Customer().DefaultSource.ID,
 		}
 		add(cm)
