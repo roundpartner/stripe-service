@@ -82,7 +82,9 @@ func (rs *RestServer) Charge(w http.ResponseWriter, req *http.Request) {
 	}
 	params.AddMetadata("trans_id", t.Trans)
 	params.AddMetadata("business_name", t.Business)
-	params.SetSource(token)
+	if "" != token {
+		params.SetSource(token)
+	}
 
 	charge, err := charge.New(params)
 
