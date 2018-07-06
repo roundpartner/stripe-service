@@ -50,7 +50,7 @@ func TestCustomers(t *testing.T) {
 	rs.router().ServeHTTP(rr, req)
 
 	if rr.Code != http.StatusOK {
-		t.Errorf("wrong error code returned: %s", rr.Code)
+		t.Errorf("wrong error code returned: %d", rr.Code)
 		t.FailNow()
 	}
 
@@ -82,7 +82,7 @@ func TestGetCustomer(t *testing.T) {
 	rs.router().ServeHTTP(rr, req)
 
 	if rr.Code != http.StatusOK {
-		t.Errorf("wrong error code returned: %s", rr.Code)
+		t.Errorf("wrong error code returned: %d", rr.Code)
 		t.FailNow()
 	}
 
@@ -110,7 +110,7 @@ func TestNewCustomer(t *testing.T) {
 	rs.router().ServeHTTP(rr, req)
 
 	if rr.Code != http.StatusOK {
-		t.Errorf("wrong error code returned: %s", rr.Code)
+		t.Errorf("wrong error code returned: %d", rr.Code)
 		t.FailNow()
 	}
 
@@ -139,7 +139,7 @@ func TestNewCustomerWithoutCard(t *testing.T) {
 	rs.router().ServeHTTP(rr, req)
 
 	if rr.Code != http.StatusOK {
-		t.Errorf("wrong error code returned: %s", rr.Code)
+		t.Errorf("wrong error code returned: %d", rr.Code)
 		t.FailNow()
 	}
 
@@ -168,7 +168,7 @@ func TestUpdateCustomer(t *testing.T) {
 	rs.router().ServeHTTP(rr, req)
 
 	if rr.Code != http.StatusOK {
-		t.Errorf("wrong error code returned: %s", rr.Code)
+		t.Errorf("wrong error code returned: %d", rr.Code)
 	}
 
 	if "application/json; charset=utf-8" != rr.Header().Get("Content-Type") {
@@ -228,7 +228,7 @@ func TestReloadCustomers(t *testing.T) {
 	rs.router().ServeHTTP(rr, req)
 
 	if rr.Code != http.StatusNoContent {
-		t.Errorf("wrong error code returned: %s", rr.Code)
+		t.Errorf("wrong error code returned: %d", rr.Code)
 	}
 
 	if "application/json; charset=utf-8" != rr.Header().Get("Content-Type") {

@@ -19,7 +19,7 @@ func TestRestServer_UpdateCustomerCard(t *testing.T) {
 	rs.router().ServeHTTP(rr, req)
 
 	if rr.Code != http.StatusOK {
-		t.Errorf("wrong error code returned: %s", rr.Code)
+		t.Errorf("wrong error code returned: %d", rr.Code)
 		t.Fail()
 	}
 
@@ -46,7 +46,7 @@ func TestUpdatingCustomerCardWithoutSource(t *testing.T) {
 	rs.router().ServeHTTP(rr, req)
 
 	if rr.Code != http.StatusBadRequest {
-		t.Errorf("wrong error code returned: %s", rr.Code)
+		t.Errorf("wrong error code returned: %d", rr.Code)
 		t.Fail()
 	}
 
