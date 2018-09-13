@@ -76,7 +76,7 @@ func getCustomer(id string) (*stripe.Customer, error) {
 func NewCustomerParam(t *CustomerRequest) *stripe.CustomerParams {
 	customerParams := &stripe.CustomerParams{
 		Description: &t.Desc,
-		Email: &t.Email,
+		Email:       &t.Email,
 	}
 	customerParams.AddMetadata("account", t.Account)
 	customerParams.AddMetadata("user", t.User)

@@ -3,6 +3,7 @@ package http
 import (
 	"encoding/json"
 	"github.com/gorilla/mux"
+	"github.com/roundpartner/go/transaction"
 	"github.com/stripe/stripe-go"
 	"github.com/stripe/stripe-go/charge"
 	"log"
@@ -44,11 +45,12 @@ func New() *RestServer {
 type ChargeRequest struct {
 	Trans    string `json:"trans_id"`
 	Token    string `json:"token"`
-	Amount   int64 `json:"amount"`
+	Amount   int64  `json:"amount"`
 	Desc     string `json:"desc"`
 	Email    string `json:"receipt_email"`
 	Business string `json:"business_name"`
 	Customer string `json:"customer"`
+	Callback string `json:"callback"`
 	Currency string
 }
 
@@ -70,9 +72,9 @@ func (rs *RestServer) Charge(w http.ResponseWriter, req *http.Request) {
 
 	token := t.Token
 	params := &stripe.ChargeParams{
-		Amount:   &t.Amount,
-		Currency: &t.Currency,
-		Description:     &t.Desc,
+		Amount:      &t.Amount,
+		Currency:    &t.Currency,
+		Description: &t.Desc,
 	}
 	if "" != t.Customer {
 		params.Customer = &t.Customer
@@ -91,6 +93,10 @@ func (rs *RestServer) Charge(w http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		StripeError(w, err.Error())
 		return
+	}
+
+	if t.Callback != "" {
+		transaction.CallbackTransactionFailed(t.Callback, t.Trans, err.Error())
 	}
 
 	js, _ := json.Marshal(charge)

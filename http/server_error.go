@@ -3,8 +3,8 @@ package http
 import (
 	"bytes"
 	"encoding/json"
-	"net/http"
 	"log"
+	"net/http"
 )
 
 type message struct {
