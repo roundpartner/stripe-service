@@ -92,11 +92,14 @@ func (rs *RestServer) Charge(w http.ResponseWriter, req *http.Request) {
 
 	if err != nil {
 		StripeError(w, err.Error())
+		if t.Callback != "" {
+			transaction.CallbackTransactionFailed(t.Callback, t.Trans, err.Error())
+		}
 		return
 	}
 
 	if t.Callback != "" {
-		transaction.CallbackTransactionFailed(t.Callback, t.Trans, err.Error())
+		transaction.CallbackTransactionSuccessful(t.Callback, t.Trans, "5", charge.FailureMessage, charge.Amount)
 	}
 
 	js, _ := json.Marshal(charge)
