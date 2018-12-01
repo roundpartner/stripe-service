@@ -8,11 +8,13 @@ import (
 	"github.com/stripe/stripe-go/charge"
 	"log"
 	"net/http"
+	"fmt"
 )
 
-func ListenAndServe() {
+func ListenAndServe(port int) {
+	address := fmt.Sprintf(":%d", port)
 	rs := New()
-	server := &http.Server{Addr: ":57493", Handler: rs.router()}
+	server := &http.Server{Addr: address, Handler: rs.router()}
 
 	ShutdownGracefully(server)
 
