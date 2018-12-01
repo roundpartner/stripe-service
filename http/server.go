@@ -35,6 +35,7 @@ func (rs *RestServer) router() *mux.Router {
 	router.HandleFunc("/customer", rs.NewCustomer).Methods("POST")
 	router.HandleFunc("/customer/{id}/card", rs.UpdateCustomerCard).Methods("PUT")
 	router.HandleFunc("/reload", rs.ReloadCustomers).Methods("GET")
+	AddCheck(router)
 	return router
 }
 
