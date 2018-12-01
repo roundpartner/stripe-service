@@ -1,8 +1,8 @@
-package http
+package main
 
 import (
-	"net/http"
 	"github.com/gorilla/mux"
+	"net/http"
 )
 
 func AddCheck(router *mux.Router) {

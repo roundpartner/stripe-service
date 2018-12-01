@@ -1,14 +1,14 @@
-package http
+package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/gorilla/mux"
 	"github.com/roundpartner/go/transaction"
 	"github.com/stripe/stripe-go"
 	"github.com/stripe/stripe-go/charge"
 	"log"
 	"net/http"
-	"fmt"
 )
 
 func ListenAndServe(port int) {

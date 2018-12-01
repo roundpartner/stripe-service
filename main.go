@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"github.com/artyom/autoflags"
-	"github.com/roundpartner/stripe-service/http"
 	"log"
 	"os"
 )
@@ -19,5 +18,5 @@ func main() {
 	autoflags.Define(&ServerConfig)
 	flag.Parse()
 	initStripe()
-	http.ListenAndServe(ServerConfig.Port)
+	ListenAndServe(ServerConfig.Port)
 }
