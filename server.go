@@ -30,6 +30,7 @@ type RestServer struct {
 
 func (rs *RestServer) router() *mux.Router {
 	router := mux.NewRouter()
+	Check(router)
 	router.HandleFunc("/charge", rs.Charge).Methods("POST")
 	router.HandleFunc("/customer", rs.Customers).Methods("GET")
 	router.HandleFunc("/customer/{id}", rs.GetCustomer).Methods("GET")
@@ -37,7 +38,6 @@ func (rs *RestServer) router() *mux.Router {
 	router.HandleFunc("/customer", rs.NewCustomer).Methods("POST")
 	router.HandleFunc("/customer/{id}/card", rs.UpdateCustomerCard).Methods("PUT")
 	router.HandleFunc("/reload", rs.ReloadCustomers).Methods("GET")
-	AddCheck(router)
 	return router
 }
 
