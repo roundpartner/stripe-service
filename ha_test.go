@@ -23,10 +23,10 @@ func TestThatServiceIsDown(t *testing.T) {
 	rr := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/check", nil)
 
+	serviceAvailable = false
+
 	rs := New()
 	rs.router().ServeHTTP(rr, req)
-
-	serviceAvailable = false
 
 	if rr.Code != http.StatusUnauthorized {
 		t.Fatalf("Service did not return unauthorised status")
