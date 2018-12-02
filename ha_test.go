@@ -29,7 +29,7 @@ func TestThatServiceIsDown(t *testing.T) {
 	serviceAvailable = false
 
 	if rr.Code != http.StatusUnauthorized {
-		t.Fatalf("Service did not return ok no content status")
+		t.Fatalf("Service did not return unauthorised status")
 		t.FailNow()
 	}
 }
