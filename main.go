@@ -7,6 +7,8 @@ import (
 	"os"
 )
 
+var ServiceName = "go-cms"
+
 var ServerConfig = struct {
 	Port int `flag:"port,port number to listen on"`
 }{
