@@ -236,3 +236,33 @@ func TestReloadCustomers(t *testing.T) {
 		t.FailNow()
 	}
 }
+
+func TestGetCustomerSubscriptions(t *testing.T) {
+	stripe.Key = util.GetTestKey()
+	rr := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/customer/cus_DOQj7OGOt6mX1n/subscription", nil)
+	rs := New()
+	rs.router().ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Errorf("wrong error code returned: %d", rr.Code)
+	}
+
+	if "application/json; charset=utf-8" != rr.Header().Get("Content-Type") {
+		t.Errorf("wrong content type returned: %s", rr.Header().Get("Content-Type"))
+		t.FailNow()
+	}
+
+	subscription := &stripe.SubscriptionList{}
+	decoder := json.NewDecoder(rr.Body)
+	err := decoder.Decode(&subscription.Data)
+	if nil != err {
+		t.Error(err.Error())
+		t.Error(rr.Body.String())
+		t.FailNow()
+	}
+
+	if len(subscription.Data) == 0 {
+		t.Fatalf("%d values returned instead of 1", len(subscription.Data))
+	}
+}

@@ -214,3 +214,18 @@ func add(c *CustomerMeta) {
 	customerMetaList[c.Account] = c
 	customerMutex.Unlock()
 }
+
+func (rs *RestServer) GetCustomerSubscriptions(w http.ResponseWriter, req *http.Request) {
+	params := mux.Vars(req)
+	id := params["id"]
+	customer, err := getCustomer(id)
+	if err != nil {
+		StripeError(w, err.Error())
+		return
+	}
+
+	js, _ := json.Marshal(customer.Subscriptions.Data)
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.WriteHeader(http.StatusOK)
+	w.Write(js)
+}

@@ -48,3 +48,8 @@ curl -X PUT \
 ```bash
 curl http://0.0.0.0:57493/reload
 ```
+### Subscriptions
+Get customer subscriptions
+```bash
+curl http://0.0.0.0:57493/customer/cus_BUoP6KtXPL3ajU/subscription
+```
