@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-var ServiceName = "go-cms"
+var ServiceName = "stripe"
 
 var ServerConfig = struct {
 	Port int `flag:"port,port number to listen on"`
@@ -19,6 +19,12 @@ func main() {
 	log.SetOutput(os.Stdout)
 	autoflags.Define(&ServerConfig)
 	flag.Parse()
+
+	serviceName, isSet := os.LookupEnv("SERVICE_NAME")
+	if isSet {
+		ServiceName = serviceName
+	}
+
 	initStripe()
 	ListenAndServe(ServerConfig.Port)
 }
