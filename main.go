@@ -20,10 +20,15 @@ func main() {
 	autoflags.Define(&ServerConfig)
 	flag.Parse()
 
-	serviceName, isSet := os.LookupEnv("SERVICE_NAME")
-	if isSet {
+	if serviceName, isSet := os.LookupEnv("SERVICE_NAME"); isSet {
 		ServiceName = serviceName
 	}
+
+	defer func() {
+		if err := recover(); err != nil {
+			log.Printf("[ERROR] [%s] %s", ServiceName, err)
+		}
+	}()
 
 	initStripe()
 	ListenAndServe(ServerConfig.Port)

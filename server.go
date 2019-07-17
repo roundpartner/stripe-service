@@ -9,12 +9,19 @@ import (
 	"github.com/stripe/stripe-go/charge"
 	"log"
 	"net/http"
+	"time"
 )
 
 func ListenAndServe(port int) {
 	address := fmt.Sprintf(":%d", port)
 	rs := New()
-	server := &http.Server{Addr: address, Handler: rs.router()}
+	server := &http.Server{
+		Addr:         address,
+		Handler:      rs.router(),
+		WriteTimeout: time.Second * 15,
+		ReadTimeout:  time.Second * 15,
+		IdleTimeout:  time.Second * 60,
+	}
 
 	ShutdownGracefully(server)
 
