@@ -2,12 +2,15 @@ package client
 
 import (
 	"encoding/json"
-	"github.com/stripe/stripe-go"
 	"log"
 	"net/http"
 )
 
-func Subscription(customer string) *stripe.SubscriptionList {
+type SubscriptionItem struct {
+	Status string `json:"status"`
+}
+
+func Subscription(customer string) []SubscriptionItem {
 	client := &http.Client{}
 	url := "http://localhost:57493/customer/" + customer + "/subscription"
 	req, err := http.NewRequest("GET", url, nil)
@@ -22,9 +25,9 @@ func Subscription(customer string) *stripe.SubscriptionList {
 	}
 	defer resp.Body.Close()
 
-	subscriptions := &stripe.SubscriptionList{}
+	var subscriptions []SubscriptionItem
 
 	decoder := json.NewDecoder(resp.Body)
-	decoder.Decode(subscriptions)
+	decoder.Decode(&subscriptions)
 	return subscriptions
 }

@@ -10,7 +10,8 @@ func TestSubscription(t *testing.T) {
 	defer gock.Off()
 	gock.New("http://localhost:57493").
 		Get("/customer/cus_12345/subscription").
-		Reply(http.StatusOK).BodyString("[]")
+		Reply(http.StatusOK).
+		BodyString(`[{"status":"active"}]`)
 
 	subscription := Subscription("cus_12345")
 
@@ -18,7 +19,11 @@ func TestSubscription(t *testing.T) {
 		t.Errorf("Mocked http was not called")
 	}
 
-	if subscription.TotalCount != 1 {
-		t.Errorf("Unexpected total count: %d", subscription.TotalCount)
+	if len(subscription) != 1 {
+		t.Fatalf("Unexpected total count: %d", len(subscription))
+	}
+
+	if subscription[0].Status != "active" {
+		t.Errorf("Unexpected status for subscription")
 	}
 }
