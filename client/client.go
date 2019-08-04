@@ -1,6 +1,7 @@
 package client
 
 import (
+	"encoding/json"
 	"github.com/stripe/stripe-go"
 	"log"
 	"net/http"
@@ -22,5 +23,8 @@ func Subscription(customer string) *stripe.SubscriptionList {
 	defer resp.Body.Close()
 
 	subscriptions := &stripe.SubscriptionList{}
+
+	decoder := json.NewDecoder(resp.Body)
+	decoder.Decode(subscriptions)
 	return subscriptions
 }

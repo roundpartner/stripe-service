@@ -51,5 +51,5 @@ curl http://0.0.0.0:57493/reload
 ### Subscriptions
 Get customer subscriptions
 ```bash
-curl http://0.0.0.0:57493/customer/cus_BUoP6KtXPL3ajU/subscription
+curl http://0.0.0.0:57493/customer/cus_DOQj7OGOt6mX1n/subscription
 ```

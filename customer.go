@@ -224,6 +224,10 @@ func (rs *RestServer) GetCustomerSubscriptions(w http.ResponseWriter, req *http.
 		return
 	}
 
+	if customer.Subscriptions == nil {
+		customer.Subscriptions = &stripe.SubscriptionList{}
+	}
+
 	js, _ := json.Marshal(customer.Subscriptions.Data)
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)

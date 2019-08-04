@@ -10,7 +10,7 @@ func TestSubscription(t *testing.T) {
 	defer gock.Off()
 	gock.New("http://localhost:57493").
 		Get("/customer/cus_12345/subscription").
-		Reply(http.StatusOK)
+		Reply(http.StatusOK).BodyString("[]")
 
 	subscription := Subscription("cus_12345")
 
