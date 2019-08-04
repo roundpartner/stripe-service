@@ -12,9 +12,13 @@ func TestSubscription(t *testing.T) {
 		Get("/customer/cus_12345/subscription").
 		Reply(http.StatusOK)
 
-	Subscription("cus_12345")
+	subscription := Subscription("cus_12345")
 
 	if !gock.IsDone() {
 		t.Errorf("Mocked http was not called")
+	}
+
+	if subscription.TotalCount != 1 {
+		t.Errorf("Unexpected total count: %d", subscription.TotalCount)
 	}
 }
