@@ -8,6 +8,12 @@ import (
 
 type SubscriptionItem struct {
 	Status string `json:"status"`
+	DaysUntilDue int `json:"days_until_due"`
+	Plan PlanItem `json:"plan"`
+}
+
+type PlanItem struct {
+	Name string `json:"nickname"`
 }
 
 func Subscription(customer string) []SubscriptionItem {
