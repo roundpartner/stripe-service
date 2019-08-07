@@ -18,12 +18,12 @@
   version = "v1.7.3"
 
 [[projects]]
-  digest = "1:808cdddf087fb64baeae67b8dfaee2069034d9704923a3cb8bd96a995421a625"
-  name = "github.com/patrickmn/go-cache"
+  digest = "1:574f4e0c57e045c9d109d23c60c586b2198eaead53daa97ed5f65c616e22a9b0"
+  name = "github.com/h2non/parth"
   packages = ["."]
   pruneopts = "UT"
-  revision = "a3647f8e31d79543b2d0f0ae2fe5c379d72cedc0"
-  version = "v2.1.0"
+  revision = "b4df798d65426f8c8ab5ca5f9987aec5575d26c9"
+  version = "v2.0.1"
 
 [[projects]]
   branch = "master"
@@ -47,18 +47,26 @@
   revision = "d93d9f7cdc48b48ed9f26b2c72993d12d8d2f2ac"
   version = "v61.13.0"
 
+[[projects]]
+  digest = "1:80d8747c77f6b6c8e77232cd04aa93cbf4489836d47e487566d94e6ecbe23082"
+  name = "gopkg.in/h2non/gock.v1"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "3ffff9b1aa8200275a5eb219c5f9c62bd27acb31"
+  version = "v1.0.15"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
     "github.com/artyom/autoflags",
     "github.com/gorilla/mux",
-    "github.com/patrickmn/go-cache",
     "github.com/roundpartner/go/transaction",
     "github.com/stripe/stripe-go",
     "github.com/stripe/stripe-go/card",
     "github.com/stripe/stripe-go/charge",
     "github.com/stripe/stripe-go/customer",
+    "gopkg.in/h2non/gock.v1",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1
