@@ -34,12 +34,13 @@
   revision = "7a4a9b297a8e67ae2992e8469dc7701de10156af"
 
 [[projects]]
-  digest = "1:195bc5cd5b9f21c60a8bbcbbbaa4244c56c84d87b696ac00ca42772697d76749"
+  digest = "1:dfae98b994a5eb1457bb192acbc34832128aaac4d0a74c516e72646a2268b177"
   name = "github.com/stripe/stripe-go"
   packages = [
     ".",
     "card",
     "charge",
+    "checkout/session",
     "customer",
     "form",
   ]
@@ -65,6 +66,7 @@
     "github.com/stripe/stripe-go",
     "github.com/stripe/stripe-go/card",
     "github.com/stripe/stripe-go/charge",
+    "github.com/stripe/stripe-go/checkout/session",
     "github.com/stripe/stripe-go/customer",
     "gopkg.in/h2non/gock.v1",
   ]

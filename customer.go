@@ -5,6 +5,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/stripe/stripe-go"
 	"github.com/stripe/stripe-go/card"
+	"github.com/stripe/stripe-go/checkout/session"
 	"github.com/stripe/stripe-go/customer"
 	"log"
 	"net/http"
@@ -229,6 +230,39 @@ func (rs *RestServer) GetCustomerSubscriptions(w http.ResponseWriter, req *http.
 	}
 
 	js, _ := json.Marshal(customer.Subscriptions.Data)
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.WriteHeader(http.StatusOK)
+	w.Write(js)
+}
+
+func (rs *RestServer) GetCustomerSession(w http.ResponseWriter, req *http.Request) {
+	params := mux.Vars(req)
+	id := params["id"]
+	customer, err := getCustomer(id)
+	if err != nil {
+		StripeError(w, err.Error())
+		return
+	}
+
+	stripeParams := &stripe.CheckoutSessionParams{
+		PaymentMethodTypes: stripe.StringSlice([]string{
+			"card",
+		}),
+		SubscriptionData: &stripe.CheckoutSessionSubscriptionDataParams{
+			Items: []*stripe.CheckoutSessionSubscriptionDataItemsParams{
+				&stripe.CheckoutSessionSubscriptionDataItemsParams{
+					Plan: stripe.String("plan_123"),
+				},
+			},
+		},
+		Customer:   &customer.ID,
+		SuccessURL: stripe.String("https://example.com/success"),
+		CancelURL:  stripe.String("https://example.com/cancel"),
+	}
+
+	session, err := session.New(stripeParams)
+
+	js, _ := json.Marshal(session)
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	w.Write(js)

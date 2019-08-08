@@ -12,14 +12,6 @@
   name = "github.com/gorilla/mux"
   version = "1.7.3"
 
-[[constraint]]
-  branch = "master"
-  name = "github.com/roundpartner/go"
-
-[[constraint]]
-  name = "github.com/stripe/stripe-go"
-  version = "61.13.0"
-
 [prune]
   go-tests = true
   unused-packages = true

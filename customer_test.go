@@ -296,3 +296,20 @@ func TestGetCustomerSubscriptionsEmpty(t *testing.T) {
 		t.Fatalf("%d values returned instead of 0", len(subscription.Data))
 	}
 }
+
+func TestRestServer_GetCustomerSession(t *testing.T) {
+	stripe.Key = util.GetTestKey()
+	rr := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/customer/cus_BUoP6KtXPL3ajU/session", nil)
+	rs := New()
+	rs.router().ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Errorf("wrong error code returned: %d", rr.Code)
+	}
+
+	if "application/json; charset=utf-8" != rr.Header().Get("Content-Type") {
+		t.Errorf("wrong content type returned: %s", rr.Header().Get("Content-Type"))
+		t.FailNow()
+	}
+}
