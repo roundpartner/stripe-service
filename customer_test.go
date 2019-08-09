@@ -300,7 +300,7 @@ func TestGetCustomerSubscriptionsEmpty(t *testing.T) {
 func TestRestServer_GetCustomerSession(t *testing.T) {
 	stripe.Key = util.GetTestKey()
 	rr := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/customer/cus_BUoP6KtXPL3ajU/session", nil)
+	req, _ := http.NewRequest("GET", "/customer/cus_BUoP6KtXPL3ajU/session/plan_123", nil)
 	rs := New()
 	rs.router().ServeHTTP(rr, req)
 

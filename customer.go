@@ -238,6 +238,7 @@ func (rs *RestServer) GetCustomerSubscriptions(w http.ResponseWriter, req *http.
 func (rs *RestServer) GetCustomerSession(w http.ResponseWriter, req *http.Request) {
 	params := mux.Vars(req)
 	id := params["id"]
+	plan := params["plan"]
 	customer, err := getCustomer(id)
 	if err != nil {
 		StripeError(w, err.Error())
@@ -251,7 +252,7 @@ func (rs *RestServer) GetCustomerSession(w http.ResponseWriter, req *http.Reques
 		SubscriptionData: &stripe.CheckoutSessionSubscriptionDataParams{
 			Items: []*stripe.CheckoutSessionSubscriptionDataItemsParams{
 				&stripe.CheckoutSessionSubscriptionDataItemsParams{
-					Plan: stripe.String("plan_123"),
+					Plan: stripe.String(plan),
 				},
 			},
 		},
