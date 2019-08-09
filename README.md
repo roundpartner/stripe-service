@@ -53,3 +53,7 @@ Get customer subscriptions
 ```bash
 curl http://0.0.0.0:57493/customer/cus_DOQj7OGOt6mX1n/subscription
 ```
+### Sessions
+```bash
+curl -X POST http://0.0.0.0:57493/customer/cus_BUoP6KtXPL3ajU/session/plan_FPSDCc5aQKEEP3
+```

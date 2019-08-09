@@ -6,6 +6,7 @@ import (
 	"github.com/stripe/stripe-go"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"strings"
 	"testing"
 )
@@ -299,17 +300,31 @@ func TestGetCustomerSubscriptionsEmpty(t *testing.T) {
 
 func TestRestServer_GetCustomerSession(t *testing.T) {
 	stripe.Key = util.GetTestKey()
+	if err := os.Setenv("STRIPE_SUCCESS_URL", "https://example/success"); err != nil {
+		t.Fatalf("unable to set environment")
+	}
+	if err := os.Setenv("STRIPE_CANCEL_URL", "https://example/cancel"); err != nil {
+		t.Fatalf("unable to set environment")
+	}
 	rr := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/customer/cus_BUoP6KtXPL3ajU/session/plan_123", nil)
+	req, _ := http.NewRequest("POST", "/customer/cus_C3MQXNRknd5e6p/session/plan_FPSDCc5aQKEEP3", nil)
 	rs := New()
 	rs.router().ServeHTTP(rr, req)
 
 	if rr.Code != http.StatusOK {
 		t.Errorf("wrong error code returned: %d", rr.Code)
+		t.Errorf("body: %s", rr.Body.String())
 	}
 
 	if "application/json; charset=utf-8" != rr.Header().Get("Content-Type") {
 		t.Errorf("wrong content type returned: %s", rr.Header().Get("Content-Type"))
 		t.FailNow()
+	}
+
+	session := &stripe.CheckoutSession{}
+	decoder := json.NewDecoder(rr.Body)
+	err := decoder.Decode(&session)
+	if err != nil {
+		t.Fatalf("Unable to decode session data")
 	}
 }
