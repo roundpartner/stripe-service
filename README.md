@@ -11,6 +11,8 @@ go build
 # Usage
 ```bash
 export STRIPE_KEY="your stripe key"
+export STRIPE_SUCCESS_URL="https://example/success"
+export STRIPE_CANCEL_URL="https://example/cancel"
 ./stripe-service
 ```
 ## Charge
