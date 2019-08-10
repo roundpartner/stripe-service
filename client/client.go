@@ -52,6 +52,7 @@ func Subscription(customer string) []SubscriptionItem {
 
 	for key := range subscriptions {
 		subscriptions[key].Plan.PlanId = subscriptions[key].Plan.Id
+		subscriptions[key].Plan.Id = ""
 	}
 
 	return subscriptions
