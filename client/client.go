@@ -14,13 +14,15 @@ type SubscriptionItem struct {
 }
 
 type PlanItem struct {
-	Name string `json:"nickname"`
+	PlanId string `json:"plan_id"`
+	Name   string `json:"nickname"`
+	Amount int64  `json:"amount"`
 }
 
 type SessionItem struct {
-	Id         string `json:"session_id"`
-	CustomerId string `json:"customer_id"`
-	PlanId     string `json:"plan_id"`
+	Id         string   `json:"session_id"`
+	CustomerId string   `json:"customer_id"`
+	Plan       PlanItem `json:"plan"`
 }
 
 func Subscription(customer string) []SubscriptionItem {
@@ -67,6 +69,10 @@ func Session(customer string, plan string) *SessionItem {
 	return &SessionItem{
 		Id:         session.ID,
 		CustomerId: session.Customer.ID,
-		PlanId:     session.DisplayItems[0].Plan.ID,
+		Plan: PlanItem{
+			PlanId: session.DisplayItems[0].Plan.ID,
+			Name:   session.DisplayItems[0].Plan.Nickname,
+			Amount: session.DisplayItems[0].Plan.Amount,
+		},
 	}
 }

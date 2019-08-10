@@ -57,7 +57,11 @@ func TestSession(t *testing.T) {
 		t.Errorf("Unexpected customer id")
 	}
 
-	if session.PlanId != "plan_1234" {
+	if session.Plan.PlanId != "plan_1234" {
 		t.Errorf("Unexpected plan id")
+	}
+
+	if session.Plan.Amount != 1000 {
+		t.Errorf("Unexpected amount")
 	}
 }
