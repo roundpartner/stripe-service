@@ -56,4 +56,8 @@ func TestSession(t *testing.T) {
 	if session.CustomerId != "cus_12345" {
 		t.Errorf("Unexpected customer id")
 	}
+
+	if session.PlanId != "plan_1234" {
+		t.Errorf("Unexpected plan id")
+	}
 }

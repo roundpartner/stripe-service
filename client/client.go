@@ -20,6 +20,7 @@ type PlanItem struct {
 type SessionItem struct {
 	Id         string `json:"id"`
 	CustomerId string `json:"customer_id"`
+	PlanId     string `json:"plan_id"`
 }
 
 func Subscription(customer string) []SubscriptionItem {
@@ -66,5 +67,6 @@ func Session(customer string, plan string) *SessionItem {
 	return &SessionItem{
 		Id:         session.ID,
 		CustomerId: session.Customer.ID,
+		PlanId:     session.DisplayItems[0].Plan.ID,
 	}
 }
