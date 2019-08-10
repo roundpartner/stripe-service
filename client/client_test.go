@@ -53,7 +53,7 @@ func TestSession(t *testing.T) {
 		t.Fatalf("Session not returned")
 	}
 
-	if session.Customer.ID != "cus_12345" {
+	if session.CustomerId != "cus_12345" {
 		t.Errorf("Unexpected customer id")
 	}
 }

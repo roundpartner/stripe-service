@@ -17,6 +17,11 @@ type PlanItem struct {
 	Name string `json:"nickname"`
 }
 
+type SessionItem struct {
+	Id         string `json:"id"`
+	CustomerId string `json:"customer_id"`
+}
+
 func Subscription(customer string) []SubscriptionItem {
 	client := &http.Client{}
 	url := "http://localhost:57493/customer/" + customer + "/subscription"
@@ -39,7 +44,7 @@ func Subscription(customer string) []SubscriptionItem {
 	return subscriptions
 }
 
-func Session(customer string, plan string) *stripe.CheckoutSession {
+func Session(customer string, plan string) *SessionItem {
 	client := &http.Client{}
 	url := "http://localhost:57493/customer/" + customer + "/session/" + plan
 	req, err := http.NewRequest("GET", url, nil)
@@ -58,5 +63,8 @@ func Session(customer string, plan string) *stripe.CheckoutSession {
 
 	decoder := json.NewDecoder(resp.Body)
 	decoder.Decode(&session)
-	return &session
+	return &SessionItem{
+		Id:         session.ID,
+		CustomerId: session.Customer.ID,
+	}
 }
