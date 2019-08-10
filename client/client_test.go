@@ -11,7 +11,7 @@ func TestSubscription(t *testing.T) {
 	gock.New("http://localhost:57493").
 		Get("/customer/cus_12345/subscription").
 		Reply(http.StatusOK).
-		BodyString(`[{"status":"active","days_until_due": 7,"plan":{"nickname":"Plan"}}]`)
+		BodyString(`[{"status":"active","days_until_due": 7,"plan":{"id":"plan_12345","nickname":"Plan"}}]`)
 
 	subscription := Subscription("cus_12345")
 
@@ -33,6 +33,10 @@ func TestSubscription(t *testing.T) {
 
 	if subscription[0].Plan.Name != "Plan" {
 		t.Errorf("Unexpected plan")
+	}
+
+	if subscription[0].Plan.PlanId != "plan_12345" {
+		t.Errorf("Unexpected plan id")
 	}
 }
 

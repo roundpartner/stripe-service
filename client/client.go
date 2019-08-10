@@ -14,6 +14,7 @@ type SubscriptionItem struct {
 }
 
 type PlanItem struct {
+	Id     string `json:"id,omitempty"`
 	PlanId string `json:"plan_id"`
 	Name   string `json:"nickname"`
 	Amount int64  `json:"amount"`
@@ -48,6 +49,11 @@ func Subscription(customer string) []SubscriptionItem {
 
 	decoder := json.NewDecoder(resp.Body)
 	decoder.Decode(&subscriptions)
+
+	for key := range subscriptions {
+		subscriptions[key].Plan.PlanId = subscriptions[key].Plan.Id
+	}
+
 	return subscriptions
 }
 
