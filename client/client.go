@@ -30,12 +30,16 @@ func Subscription(customer string) []SubscriptionItem {
 	url := "http://localhost:57493/customer/" + customer + "/subscription"
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		log.Printf("[ERROR] %s\n", err.Error())
+		log.Printf("[ERROR] %s", err.Error())
 		return nil
 	}
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Printf("[ERROR] %s\n", err.Error())
+		log.Printf("[ERROR] %s", err.Error())
+		return nil
+	}
+	if resp.StatusCode != http.StatusOK {
+		log.Printf("[ERROR] %s", "service returned non ok status")
 		return nil
 	}
 	defer resp.Body.Close()
