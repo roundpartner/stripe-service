@@ -47,7 +47,7 @@ func Subscription(customer string) []SubscriptionItem {
 func Session(customer string, plan string) *SessionItem {
 	client := &http.Client{}
 	url := "http://localhost:57493/customer/" + customer + "/session/" + plan
-	req, err := http.NewRequest("GET", url, nil)
+	req, err := http.NewRequest("POST", url, nil)
 	if err != nil {
 		log.Printf("[ERROR] %s\n", err.Error())
 		return nil
