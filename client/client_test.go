@@ -65,3 +65,21 @@ func TestSession(t *testing.T) {
 		t.Errorf("Unexpected amount")
 	}
 }
+
+func TestSessionError(t *testing.T) {
+	defer gock.Off()
+	gock.New("http://localhost:57493").
+		Post("/customer/cus_12345/session/plan_1234").
+		Reply(http.StatusBadRequest).
+		BodyString(`{"error":{"code":"resource_missing","status":400,"message":"No such plan","type":"invalid_request_error"}`)
+
+	session := Session("cus_12345", "plan_1234")
+
+	if !gock.IsDone() {
+		t.Errorf("Mocked http was not called")
+	}
+
+	if session != nil {
+		t.Errorf("Expected no session to be returned")
+	}
+}

@@ -52,19 +52,23 @@ func Session(customer string, plan string) *SessionItem {
 	url := "http://localhost:57493/customer/" + customer + "/session/" + plan
 	req, err := http.NewRequest("POST", url, nil)
 	if err != nil {
-		log.Printf("[ERROR] %s\n", err.Error())
+		log.Printf("[ERROR] %s", err.Error())
 		return nil
 	}
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Printf("[ERROR] %s\n", err.Error())
+		log.Printf("[ERROR] %s", err.Error())
 		return nil
 	}
 	defer resp.Body.Close()
 
-	session := stripe.CheckoutSession{}
+	if resp.StatusCode != http.StatusOK {
+		log.Printf("[ERROR] %s", "service returned non ok status")
+		return nil
+	}
 
 	decoder := json.NewDecoder(resp.Body)
+	session := stripe.CheckoutSession{}
 	decoder.Decode(&session)
 	return &SessionItem{
 		Id:         session.ID,
