@@ -18,7 +18,7 @@ type PlanItem struct {
 }
 
 type SessionItem struct {
-	Id         string `json:"id"`
+	Id         string `json:"session_id"`
 	CustomerId string `json:"customer_id"`
 	PlanId     string `json:"plan_id"`
 }
