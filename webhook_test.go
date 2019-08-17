@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"github.com/roundpartner/stripe-service/util"
 	"github.com/stripe/stripe-go"
 	"net/http"
@@ -22,5 +23,19 @@ func TestWebHook(t *testing.T) {
 	if "application/json; charset=utf-8" != rr.Header().Get("Content-Type") {
 		t.Errorf("wrong content type returned: %s", rr.Header().Get("Content-Type"))
 		t.FailNow()
+	}
+}
+
+func TestNewSNSService(t *testing.T) {
+	NewSNSService()
+}
+
+func TestPush(t *testing.T) {
+	buf := bytes.NewBufferString("hello world")
+
+	snsService := NewSNSService()
+	err := snsService.Push(buf)
+	if err != nil {
+		t.Errorf("Unexpected error returned: %s", err.Error())
 	}
 }

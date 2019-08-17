@@ -33,6 +33,7 @@ func ListenAndServe(port int) {
 }
 
 type RestServer struct {
+	SNSService *SNSService
 }
 
 func (rs *RestServer) router() *mux.Router {
