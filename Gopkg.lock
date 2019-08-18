@@ -10,6 +10,47 @@
   version = "v1.1.1"
 
 [[projects]]
+  digest = "1:5cacb7c4b6683d2026939dc2ca851c21ce85766b6b1133e39cb9681d4d797c8a"
+  name = "github.com/aws/aws-sdk-go"
+  packages = [
+    "aws",
+    "aws/awserr",
+    "aws/awsutil",
+    "aws/client",
+    "aws/client/metadata",
+    "aws/corehandlers",
+    "aws/credentials",
+    "aws/credentials/ec2rolecreds",
+    "aws/credentials/endpointcreds",
+    "aws/credentials/processcreds",
+    "aws/credentials/stscreds",
+    "aws/csm",
+    "aws/defaults",
+    "aws/ec2metadata",
+    "aws/endpoints",
+    "aws/request",
+    "aws/session",
+    "aws/signer/v4",
+    "internal/ini",
+    "internal/sdkio",
+    "internal/sdkrand",
+    "internal/sdkuri",
+    "internal/shareddefaults",
+    "private/protocol",
+    "private/protocol/json/jsonutil",
+    "private/protocol/query",
+    "private/protocol/query/queryutil",
+    "private/protocol/rest",
+    "private/protocol/xml/xmlutil",
+    "service/sns",
+    "service/sts",
+    "service/sts/stsiface",
+  ]
+  pruneopts = "UT"
+  revision = "fbdf1bd30caaf828d14bd5fed15130417858a723"
+  version = "v1.23.3"
+
+[[projects]]
   digest = "1:cbec35fe4d5a4fba369a656a8cd65e244ea2c743007d8f6c1ccb132acf9d1296"
   name = "github.com/gorilla/mux"
   packages = ["."]
@@ -26,15 +67,25 @@
   version = "v2.0.1"
 
 [[projects]]
-  branch = "master"
-  digest = "1:b5203191a391857d8c4fc8ef6af9e84cbeb12dc4b731884452eb301648a16969"
-  name = "github.com/roundpartner/go"
-  packages = ["transaction"]
+  digest = "1:bb81097a5b62634f3e9fec1014657855610c82d19b9a40c17612e32651e35dca"
+  name = "github.com/jmespath/go-jmespath"
+  packages = ["."]
   pruneopts = "UT"
-  revision = "7a4a9b297a8e67ae2992e8469dc7701de10156af"
+  revision = "c2b33e84"
 
 [[projects]]
-  digest = "1:dfae98b994a5eb1457bb192acbc34832128aaac4d0a74c516e72646a2268b177"
+  branch = "master"
+  digest = "1:256ea49b11e59953572f08f3ca66c50bc60474bd60a2f3f59fc23eea43dd9203"
+  name = "github.com/roundpartner/go"
+  packages = [
+    "ha",
+    "transaction",
+  ]
+  pruneopts = "UT"
+  revision = "70a07059ae3dbcd2bd82bdc5252c95520445f551"
+
+[[projects]]
+  digest = "1:1981394021004d41ef112c4bddd9a5552df66c9d9e3ffcf6e311ed76a05e7164"
   name = "github.com/stripe/stripe-go"
   packages = [
     ".",
@@ -45,8 +96,8 @@
     "form",
   ]
   pruneopts = "UT"
-  revision = "d93d9f7cdc48b48ed9f26b2c72993d12d8d2f2ac"
-  version = "v61.13.0"
+  revision = "9c59aefa4822f9a21e2ea6600b7f00cdc3e5f14a"
+  version = "v62.1.1"
 
 [[projects]]
   digest = "1:80d8747c77f6b6c8e77232cd04aa93cbf4489836d47e487566d94e6ecbe23082"
@@ -61,7 +112,12 @@
   analyzer-version = 1
   input-imports = [
     "github.com/artyom/autoflags",
+    "github.com/aws/aws-sdk-go/aws",
+    "github.com/aws/aws-sdk-go/aws/credentials",
+    "github.com/aws/aws-sdk-go/aws/session",
+    "github.com/aws/aws-sdk-go/service/sns",
     "github.com/gorilla/mux",
+    "github.com/roundpartner/go/ha",
     "github.com/roundpartner/go/transaction",
     "github.com/stripe/stripe-go",
     "github.com/stripe/stripe-go/card",

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
+	"github.com/roundpartner/go/ha"
 	"github.com/roundpartner/go/transaction"
 	"github.com/stripe/stripe-go"
 	"github.com/stripe/stripe-go/charge"
@@ -23,7 +24,7 @@ func ListenAndServe(port int) {
 		IdleTimeout:  time.Second * 60,
 	}
 
-	ShutdownGracefully(server)
+	ha.GracefulShutdown(server, ServiceName)
 
 	log.Printf("[INFO] [%s] Server starting on port %d", ServiceName, port)
 	err := server.ListenAndServe()
@@ -38,7 +39,7 @@ type RestServer struct {
 
 func (rs *RestServer) router() *mux.Router {
 	router := mux.NewRouter()
-	Check(router)
+	ha.Check(router)
 	router.HandleFunc("/charge", rs.Charge).Methods("POST")
 	router.HandleFunc("/customer", rs.Customers).Methods("GET")
 	router.HandleFunc("/customer/{id}", rs.GetCustomer).Methods("GET")

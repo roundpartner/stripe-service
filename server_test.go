@@ -112,7 +112,7 @@ func TestChargeCustomerFails(t *testing.T) {
 		t.FailNow()
 	}
 
-	if !strings.Contains(rr.Body.String(), "\"code\":\"card_declined\",\"message\":\"Your card was declined.\"") {
+	if !strings.Contains(rr.Body.String(), "\"message\":\"Your card was declined.\"") {
 		t.Error("contains not matched: ", rr.Body.String())
 		t.FailNow()
 	}
