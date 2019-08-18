@@ -25,6 +25,10 @@ func ListenAndServe(port int) {
 	}
 
 	ha.GracefulShutdown(server, ServiceName)
+	
+	snsService := NewSNSService()
+	snsService.Run()
+	rs.SNSService = snsService
 
 	log.Printf("[INFO] [%s] Server starting on port %d", ServiceName, port)
 	err := server.ListenAndServe()
