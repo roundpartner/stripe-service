@@ -25,7 +25,7 @@ func ListenAndServe(port int) {
 	}
 
 	ha.GracefulShutdown(server, ServiceName)
-	
+
 	snsService := NewSNSService()
 	snsService.Run()
 	rs.SNSService = snsService
