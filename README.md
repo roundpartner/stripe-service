@@ -13,7 +13,7 @@ go build
 export STRIPE_KEY="your stripe key"
 export STRIPE_SUCCESS_URL="https://example/success"
 export STRIPE_CANCEL_URL="https://example/cancel"
-./stripe-service
+go run github.com/roundpartner/stripe-service
 ```
 ## Charge
 To take a single payment the charge end point provides this
