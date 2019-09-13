@@ -51,7 +51,7 @@ func (snsService *SNSService) Run() {
 
 func (snsService *SNSService) Push(buffer *bytes.Buffer) error {
 	params := &sns.PublishInput{
-		Subject:  aws.String("GitHub Web Hook"),
+		Subject:  aws.String("Stripe Service Hook"),
 		Message:  aws.String(buffer.String()),
 		TopicArn: aws.String(snsService.Topic),
 	}
