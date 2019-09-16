@@ -11,7 +11,7 @@ func TestSubscription(t *testing.T) {
 	gock.New("http://localhost:57493").
 		Get("/customer/cus_12345/subscription").
 		Reply(http.StatusOK).
-		BodyString(`[{"status":"active","days_until_due": 7,"plan":{"id":"plan_12345","nickname":"Plan"}}]`)
+		BodyString(`[{"status":"active","days_until_due": 7,"current_period_end":1571246262,"plan":{"id":"plan_12345","nickname":"Plan"}}]`)
 
 	subscription := Subscription("cus_12345")
 
@@ -29,6 +29,10 @@ func TestSubscription(t *testing.T) {
 
 	if subscription[0].DaysUntilDue != 7 {
 		t.Errorf("Unexpected due date for subscription")
+	}
+
+	if subscription[0].CurrentPeriodEnd != 1571246262 {
+		t.Errorf("Unexpected current period end date for subscription")
 	}
 
 	if subscription[0].Plan.Name != "Plan" {
