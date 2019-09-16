@@ -28,6 +28,7 @@ type CustomersRequest struct {
 }
 
 func (rs *RestServer) Customers(w http.ResponseWriter, req *http.Request) {
+	log.Printf("[INFO] [%s] Request received: %s from %s", ServiceName, req.URL.Path, req.RemoteAddr)
 	t := &CustomersRequest{Limit: "100"}
 	if req.ContentLength > 0 {
 		decoder := json.NewDecoder(req.Body)
@@ -58,6 +59,7 @@ func (rs *RestServer) Customers(w http.ResponseWriter, req *http.Request) {
 }
 
 func (rs *RestServer) GetCustomer(w http.ResponseWriter, req *http.Request) {
+	log.Printf("[INFO] [%s] Request received: %s from %s", ServiceName, req.URL.Path, req.RemoteAddr)
 	params := mux.Vars(req)
 	id := params["id"]
 	customer, err := getCustomer(id)
@@ -87,6 +89,7 @@ func NewCustomerParam(t *CustomerRequest) *stripe.CustomerParams {
 }
 
 func (rs *RestServer) NewCustomer(w http.ResponseWriter, req *http.Request) {
+	log.Printf("[INFO] [%s] Request received: %s from %s", ServiceName, req.URL.Path, req.RemoteAddr)
 	decoder := json.NewDecoder(req.Body)
 	t := &CustomerRequest{}
 	err := decoder.Decode(t)
@@ -137,6 +140,7 @@ func delete(id string) bool {
 }
 
 func (rs *RestServer) UpdateCustomer(w http.ResponseWriter, req *http.Request) {
+	log.Printf("[INFO] [%s] Request received: %s from %s", ServiceName, req.URL.Path, req.RemoteAddr)
 	params := mux.Vars(req)
 	id := params["id"]
 
@@ -218,6 +222,7 @@ func add(c *CustomerMeta) {
 }
 
 func (rs *RestServer) GetCustomerSubscriptions(w http.ResponseWriter, req *http.Request) {
+	log.Printf("[INFO] [%s] Request received: %s from %s", ServiceName, req.URL.Path, req.RemoteAddr)
 	params := mux.Vars(req)
 	id := params["id"]
 	customer, err := getCustomer(id)
@@ -237,6 +242,7 @@ func (rs *RestServer) GetCustomerSubscriptions(w http.ResponseWriter, req *http.
 }
 
 func (rs *RestServer) GetCustomerSession(w http.ResponseWriter, req *http.Request) {
+	log.Printf("[INFO] [%s] Request received: %s from %s", ServiceName, req.URL.Path, req.RemoteAddr)
 	params := mux.Vars(req)
 	id := params["id"]
 	plan := params["plan"]

@@ -6,6 +6,7 @@ import (
 	"github.com/stripe/stripe-go"
 	"github.com/stripe/stripe-go/card"
 	"github.com/stripe/stripe-go/customer"
+	"log"
 	"net/http"
 )
 
@@ -14,6 +15,7 @@ type CardRequest struct {
 }
 
 func (rs *RestServer) UpdateCustomerCard(w http.ResponseWriter, req *http.Request) {
+	log.Printf("[INFO] [%s] Request received: %s from %s", ServiceName, req.URL.Path, req.RemoteAddr)
 	params := mux.Vars(req)
 	id := params["id"]
 
