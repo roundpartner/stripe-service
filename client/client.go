@@ -8,10 +8,10 @@ import (
 )
 
 type SubscriptionItem struct {
-	Status       string   `json:"status"`
-	DaysUntilDue int      `json:"days_until_due"`
-	CurrentPeriodEnd int `json:"current_period_end"`
-	Plan         PlanItem `json:"plan"`
+	Status           string   `json:"status"`
+	DaysUntilDue     int      `json:"days_until_due"`
+	CurrentPeriodEnd int      `json:"current_period_end"`
+	Plan             PlanItem `json:"plan"`
 }
 
 type PlanItem struct {
