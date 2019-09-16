@@ -192,6 +192,10 @@ func loadCustomers() {
 			log.Printf("Customer %s is a duplicate", list.Customer().ID)
 			continue
 		}
+		if list.Customer().DefaultSource == nil {
+			log.Printf("Customer %s has not default source", list.Customer().ID)
+			continue
+		}
 		cm := &CustomerMeta{
 			list.Customer().Metadata["account"],
 			list.Customer().DefaultSource.ID,
