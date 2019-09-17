@@ -187,6 +187,24 @@ func TestUpdateCustomer(t *testing.T) {
 	}
 }
 
+func TestUpdateDiscount(t *testing.T) {
+	stripe.Key = util.GetTestKey()
+
+	rr := httptest.NewRecorder()
+	req, _ := http.NewRequest("PUT", "/customer/cus_C3MQXNRknd5e6p/discount/test", nil)
+	rs := New()
+	rs.router().ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Errorf("wrong error code returned: %d", rr.Code)
+	}
+
+	if "application/json; charset=utf-8" != rr.Header().Get("Content-Type") {
+		t.Errorf("wrong content type returned: %s", rr.Header().Get("Content-Type"))
+		t.FailNow()
+	}
+}
+
 func TestChargeCustomer(t *testing.T) {
 	body := strings.NewReader("{\"customer\": \"cus_C3MQXNRknd5e6p\", \"amount\": 720, \"desc\": \"example\", \"trans_id\": \"tnx_1234\", \"business_name\": \"RoundPartner\"}")
 	stripe.Key = util.GetTestKey()

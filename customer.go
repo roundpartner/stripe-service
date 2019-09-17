@@ -165,6 +165,11 @@ func (rs *RestServer) UpdateCustomer(w http.ResponseWriter, req *http.Request) {
 	w.Write(js)
 }
 
+func (rs *RestServer) UpdateDiscount(w http.ResponseWriter, req *http.Request) {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.WriteHeader(http.StatusOK)
+}
+
 type CustomerMeta struct {
 	Account string `json:"account"`
 	Token   string `json:"token"`
