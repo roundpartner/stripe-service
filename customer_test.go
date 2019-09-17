@@ -191,7 +191,7 @@ func TestUpdateDiscount(t *testing.T) {
 	stripe.Key = util.GetTestKey()
 
 	rr := httptest.NewRecorder()
-	req, _ := http.NewRequest("PUT", "/customer/cus_C3MQXNRknd5e6p/discount/test", nil)
+	req, _ := http.NewRequest("PUT", "/customer/cus_C3MQXNRknd5e6p/discount/free", nil)
 	rs := New()
 	rs.router().ServeHTTP(rr, req)
 

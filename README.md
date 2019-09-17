@@ -50,6 +50,10 @@ curl -X PUT \
 ```bash
 curl http://0.0.0.0:57493/reload
 ```
+### Coupons
+```bash
+curl -X PUT http://0.0.0.0:57493/customer/cus_DOQj7OGOt6mX1n/coupon/free
+```
 ### Subscriptions
 Get customer subscriptions
 ```bash

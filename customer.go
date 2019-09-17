@@ -166,8 +166,23 @@ func (rs *RestServer) UpdateCustomer(w http.ResponseWriter, req *http.Request) {
 }
 
 func (rs *RestServer) UpdateDiscount(w http.ResponseWriter, req *http.Request) {
+	params := mux.Vars(req)
+	id := params["id"]
+	coupon := params["coupon"]
+
+	customerParams := &stripe.CustomerParams{}
+	customerParams.Coupon = stripe.String(coupon)
+
+	updatedCustomer, err := customer.Update(id, customerParams)
+	if err != nil {
+		StripeError(w, err.Error())
+		return
+	}
+
+	js, _ := json.Marshal(updatedCustomer)
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
+	w.Write(js)
 }
 
 type CustomerMeta struct {
