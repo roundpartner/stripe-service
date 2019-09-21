@@ -5,11 +5,9 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/stripe/stripe-go"
 	"github.com/stripe/stripe-go/card"
-	"github.com/stripe/stripe-go/checkout/session"
 	"github.com/stripe/stripe-go/customer"
 	"log"
 	"net/http"
-	"os"
 	"sync"
 )
 
@@ -276,26 +274,16 @@ func (rs *RestServer) GetCustomerSession(w http.ResponseWriter, req *http.Reques
 		return
 	}
 
-	successUrl := os.Getenv("STRIPE_SUCCESS_URL")
-	cancelUrl := os.Getenv("STRIPE_CANCEL_URL")
-
-	stripeParams := &stripe.CheckoutSessionParams{
-		PaymentMethodTypes: stripe.StringSlice([]string{
-			"card",
-		}),
-		SubscriptionData: &stripe.CheckoutSessionSubscriptionDataParams{
-			Items: []*stripe.CheckoutSessionSubscriptionDataItemsParams{
-				&stripe.CheckoutSessionSubscriptionDataItemsParams{
-					Plan: stripe.String(plan),
-				},
+	sub := &stripe.CheckoutSessionSubscriptionDataParams{
+		Items: []*stripe.CheckoutSessionSubscriptionDataItemsParams{
+			&stripe.CheckoutSessionSubscriptionDataItemsParams{
+				Plan: stripe.String(plan),
 			},
 		},
-		Customer:   &customer.ID,
-		SuccessURL: stripe.String(successUrl),
-		CancelURL:  stripe.String(cancelUrl),
 	}
 
-	session, err := session.New(stripeParams)
+	session, err := rs.CreateSession(customer, sub)
+
 	if err != nil {
 		StripeError(w, err.Error())
 		return

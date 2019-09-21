@@ -49,6 +49,7 @@ func (rs *RestServer) router() *mux.Router {
 	router.HandleFunc("/customer/{id}", rs.GetCustomer).Methods("GET")
 	router.HandleFunc("/customer/{id}", rs.UpdateCustomer).Methods("PUT")
 	router.HandleFunc("/customer/{id}/discount/{coupon}", rs.UpdateDiscount).Methods("PUT")
+	router.HandleFunc("/v2/customer/{id}/session", rs.GetCustomerSessionV2).Methods("POST")
 	router.HandleFunc("/customer/{id}/session/{plan}", rs.GetCustomerSession).Methods("POST")
 	router.HandleFunc("/customer/{id}/subscription", rs.GetCustomerSubscriptions).Methods("GET")
 	router.HandleFunc("/customer", rs.NewCustomer).Methods("POST")

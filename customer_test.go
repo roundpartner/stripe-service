@@ -6,7 +6,6 @@ import (
 	"github.com/stripe/stripe-go"
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"strings"
 	"testing"
 )
@@ -318,11 +317,8 @@ func TestGetCustomerSubscriptionsEmpty(t *testing.T) {
 
 func TestRestServer_GetCustomerSession(t *testing.T) {
 	stripe.Key = util.GetTestKey()
-	if err := os.Setenv("STRIPE_SUCCESS_URL", "https://example/success"); err != nil {
-		t.Fatalf("unable to set environment")
-	}
-	if err := os.Setenv("STRIPE_CANCEL_URL", "https://example/cancel"); err != nil {
-		t.Fatalf("unable to set environment")
+	if err := util.SetSubscriptionEnvironmentVariables(); err != nil {
+		t.Fatalf("Unable to setup test environment: %s", err.Error())
 	}
 	rr := httptest.NewRecorder()
 	req, _ := http.NewRequest("POST", "/customer/cus_C3MQXNRknd5e6p/session/plan_FPSDCc5aQKEEP3", nil)

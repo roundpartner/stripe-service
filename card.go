@@ -6,6 +6,7 @@ import (
 	"github.com/stripe/stripe-go"
 	"github.com/stripe/stripe-go/card"
 	"github.com/stripe/stripe-go/customer"
+	"github.com/stripe/stripe-go/source"
 	"log"
 	"net/http"
 )
@@ -65,4 +66,21 @@ func (rs *RestServer) UpdateCustomerCard(w http.ResponseWriter, req *http.Reques
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	w.Write(js)
+}
+
+func DeleteAllCards(id string) error {
+	c, err := getCustomer(id)
+	if err != nil {
+		return err
+	}
+	for _, card := range c.Sources.Data {
+		params := &stripe.SourceObjectDetachParams{
+			Customer: stripe.String(id),
+		}
+		_, err = source.Detach(card.ID, params)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }

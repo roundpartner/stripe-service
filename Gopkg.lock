@@ -85,7 +85,7 @@
   revision = "70a07059ae3dbcd2bd82bdc5252c95520445f551"
 
 [[projects]]
-  digest = "1:1981394021004d41ef112c4bddd9a5552df66c9d9e3ffcf6e311ed76a05e7164"
+  digest = "1:e25566a3b4bd618bf3bfa308093bb7dda8f4782b874932e9b2d0f54064badd07"
   name = "github.com/stripe/stripe-go"
   packages = [
     ".",
@@ -94,6 +94,7 @@
     "checkout/session",
     "customer",
     "form",
+    "source",
   ]
   pruneopts = "UT"
   revision = "9c59aefa4822f9a21e2ea6600b7f00cdc3e5f14a"
@@ -124,6 +125,7 @@
     "github.com/stripe/stripe-go/charge",
     "github.com/stripe/stripe-go/checkout/session",
     "github.com/stripe/stripe-go/customer",
+    "github.com/stripe/stripe-go/source",
     "gopkg.in/h2non/gock.v1",
   ]
   solver-name = "gps-cdcl"

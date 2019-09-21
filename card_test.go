@@ -69,3 +69,10 @@ func TestUpdatingCustomerCardWithoutSource(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestDeleteAllCards(t *testing.T) {
+	err := DeleteAllCards("cus_C3MQXNRknd5e6p")
+	if err != nil {
+		t.Fatalf(err.Error())
+	}
+}
