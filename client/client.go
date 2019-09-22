@@ -26,6 +26,7 @@ type SessionItem struct {
 	Id         string           `json:"session_id"`
 	CustomerId string           `json:"customer_id"`
 	Plan       map[int]PlanItem `json:"plan"`
+	Amount     int64            `json:"amount"`
 }
 
 func Subscription(customer string) []*SubscriptionItem {
@@ -91,6 +92,8 @@ func Session(customer string, plan []string) *SessionItem {
 	session := stripe.CheckoutSession{}
 	decoder.Decode(&session)
 
+	totalAmount := int64(0)
+
 	planItems := map[int]PlanItem{}
 	for index, plan := range session.DisplayItems {
 		planItems[index] = PlanItem{
@@ -98,11 +101,13 @@ func Session(customer string, plan []string) *SessionItem {
 			Name:   plan.Plan.Nickname,
 			Amount: plan.Amount,
 		}
+		totalAmount += plan.Amount
 	}
 
 	return &SessionItem{
 		Id:         session.ID,
 		CustomerId: session.Customer.ID,
 		Plan:       planItems,
+		Amount:     totalAmount,
 	}
 }
