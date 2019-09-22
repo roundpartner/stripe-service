@@ -23,12 +23,12 @@ type PlanItem struct {
 }
 
 type SessionItem struct {
-	Id         string   `json:"session_id"`
-	CustomerId string   `json:"customer_id"`
-	Plan       PlanItem `json:"plan"`
+	Id         string           `json:"session_id"`
+	CustomerId string           `json:"customer_id"`
+	Plan       map[int]PlanItem `json:"plan"`
 }
 
-func Subscription(customer string) []SubscriptionItem {
+func Subscription(customer string) []*SubscriptionItem {
 	client := &http.Client{}
 	url := "http://localhost:57493/customer/" + customer + "/subscription"
 	req, err := http.NewRequest("GET", url, nil)
@@ -47,7 +47,7 @@ func Subscription(customer string) []SubscriptionItem {
 	}
 	defer resp.Body.Close()
 
-	var subscriptions []SubscriptionItem
+	var subscriptions []*SubscriptionItem
 
 	decoder := json.NewDecoder(resp.Body)
 	decoder.Decode(&subscriptions)
@@ -90,13 +90,19 @@ func Session(customer string, plan []string) *SessionItem {
 	decoder := json.NewDecoder(resp.Body)
 	session := stripe.CheckoutSession{}
 	decoder.Decode(&session)
+
+	planItems := map[int]PlanItem{}
+	for index, plan := range session.DisplayItems {
+		planItems[index] = PlanItem{
+			PlanId: plan.Plan.ID,
+			Name:   plan.Plan.Nickname,
+			Amount: plan.Amount,
+		}
+	}
+
 	return &SessionItem{
 		Id:         session.ID,
 		CustomerId: session.Customer.ID,
-		Plan: PlanItem{
-			PlanId: session.DisplayItems[0].Plan.ID,
-			Name:   session.DisplayItems[0].Plan.Nickname,
-			Amount: session.DisplayItems[0].Plan.Amount,
-		},
+		Plan:       planItems,
 	}
 }

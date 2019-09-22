@@ -16,7 +16,7 @@ func TestRestServer_GetCustomerSessionV2(t *testing.T) {
 		t.Fatalf("Unable to setup test environment: %s", err.Error())
 	}
 
-	body := `["plan_FPSDCc5aQKEEP3"]`
+	body := `["plan_FPSDCc5aQKEEP3", "plan_FrDrMXuQmKGoIP"]`
 	rr := httptest.NewRecorder()
 	req, _ := http.NewRequest("POST", "/v2/customer/cus_C3MQXNRknd5e6p/session", bytes.NewBufferString(body))
 	rs := New()
@@ -37,6 +37,14 @@ func TestRestServer_GetCustomerSessionV2(t *testing.T) {
 	err := decoder.Decode(&session)
 	if err != nil {
 		t.Fatalf("Unable to decode session data")
+	}
+
+	if session.Customer.ID != "cus_C3MQXNRknd5e6p" {
+		t.Errorf("Unexpected customer returned")
+	}
+
+	if len(session.DisplayItems) != 2 {
+		t.Errorf("Unexpected number of items returned %d instead of 2", len(session.DisplayItems))
 	}
 
 }

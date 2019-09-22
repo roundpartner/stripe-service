@@ -258,7 +258,7 @@ func TestReloadCustomers(t *testing.T) {
 func TestGetCustomerSubscriptions(t *testing.T) {
 	stripe.Key = util.GetTestKey()
 	rr := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/customer/cus_DOQj7OGOt6mX1n/subscription", nil)
+	req, _ := http.NewRequest("GET", "/customer/cus_C3MQXNRknd5e6p/subscription", nil)
 	rs := New()
 	rs.router().ServeHTTP(rr, req)
 
