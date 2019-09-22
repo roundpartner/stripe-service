@@ -1,6 +1,7 @@
 package client
 
 import (
+	"bytes"
 	"encoding/json"
 	"github.com/stripe/stripe-go"
 	"log"
@@ -59,10 +60,17 @@ func Subscription(customer string) []SubscriptionItem {
 	return subscriptions
 }
 
-func Session(customer string, plan string) *SessionItem {
+func Session(customer string, plan []string) *SessionItem {
 	client := &http.Client{}
-	url := "http://localhost:57493/customer/" + customer + "/session/" + plan
-	req, err := http.NewRequest("POST", url, nil)
+	url := "http://localhost:57493/customer/" + customer + "/session"
+
+	body, err := json.Marshal(plan)
+	if err != nil {
+		log.Printf("[ERROR] %s", err.Error())
+		return nil
+	}
+
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(body))
 	if err != nil {
 		log.Printf("[ERROR] %s", err.Error())
 		return nil
