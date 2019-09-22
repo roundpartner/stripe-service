@@ -283,6 +283,10 @@ func TestGetCustomerSubscriptions(t *testing.T) {
 	if len(subscription.Data) == 0 {
 		t.Fatalf("%d values returned instead of 1", len(subscription.Data))
 	}
+
+	if subscription.Data[0].Items.TotalCount == 0 {
+		t.Fatalf("no plan items returned")
+	}
 }
 
 func TestGetCustomerSubscriptionsEmpty(t *testing.T) {

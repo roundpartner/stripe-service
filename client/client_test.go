@@ -11,7 +11,7 @@ func TestSubscription(t *testing.T) {
 	gock.New("http://localhost:57493").
 		Get("/customer/cus_12345/subscription").
 		Reply(http.StatusOK).
-		BodyString(`[{"status":"active","days_until_due": 0,"current_period_end":1571246262,"plan":{"id":"plan_12345","nickname":"Plan"}}]`)
+		BodyString(`[{"status":"active","days_until_due": 0,"current_period_end":1571246262,"items":{"data":[{"plan":{"id":"plan_12345","nickname":"Plan"}}]}}]`)
 
 	subscription := Subscription("cus_12345")
 
@@ -35,11 +35,11 @@ func TestSubscription(t *testing.T) {
 		t.Errorf("Unexpected current period end date for subscription")
 	}
 
-	if subscription[0].Plan.Name != "Plan" {
+	if subscription[0].Plans[0].Name != "Plan" {
 		t.Errorf("Unexpected plan")
 	}
 
-	if subscription[0].Plan.PlanId != "plan_12345" {
+	if subscription[0].Plans[0].PlanId != "plan_12345" {
 		t.Errorf("Unexpected plan id")
 	}
 }

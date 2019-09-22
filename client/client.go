@@ -9,10 +9,16 @@ import (
 )
 
 type SubscriptionItem struct {
-	Status           string   `json:"status"`
-	DaysUntilDue     int      `json:"days_until_due"`
-	CurrentPeriodEnd int      `json:"current_period_end"`
-	Plan             PlanItem `json:"plan"`
+	Status           string      `json:"status"`
+	DaysUntilDue     int         `json:"days_until_due"`
+	CurrentPeriodEnd int         `json:"current_period_end"`
+	Plan             PlanItem    `json:"plan,omitempty"`
+	Plans            []PlanItem  `json:"plans"`
+	Items            RawPlanItem `json:"items,omitempty"`
+}
+
+type RawPlanItem struct {
+	Plans []SubscriptionItem `json:"data"`
 }
 
 type PlanItem struct {
@@ -51,11 +57,18 @@ func Subscription(customer string) []*SubscriptionItem {
 	var subscriptions []*SubscriptionItem
 
 	decoder := json.NewDecoder(resp.Body)
-	decoder.Decode(&subscriptions)
+	if err := decoder.Decode(&subscriptions); err != nil {
+		log.Printf("[ERROR] Decode error: %s", err.Error())
+		return nil
+	}
 
 	for key := range subscriptions {
-		subscriptions[key].Plan.PlanId = subscriptions[key].Plan.Id
-		subscriptions[key].Plan.Id = ""
+		for subkey := range subscriptions[key].Items.Plans {
+			subscriptions[key].Items.Plans[subkey].Plan.PlanId = subscriptions[key].Items.Plans[subkey].Plan.Id
+			subscriptions[key].Items.Plans[subkey].Plan.Id = ""
+			subscriptions[key].Plans = append(subscriptions[key].Plans, subscriptions[key].Items.Plans[subkey].Plan)
+		}
+		subscriptions[key].Items = RawPlanItem{}
 	}
 
 	return subscriptions
