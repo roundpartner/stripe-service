@@ -90,7 +90,10 @@ func Session(customer string, plan []string) *SessionItem {
 
 	decoder := json.NewDecoder(resp.Body)
 	session := stripe.CheckoutSession{}
-	decoder.Decode(&session)
+	if err := decoder.Decode(&session); err != nil {
+		log.Printf("[ERROR] Decoding session response: %s", err.Error())
+		return nil
+	}
 
 	if session.ID == "" {
 		return nil
