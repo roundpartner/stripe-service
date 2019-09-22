@@ -10,6 +10,14 @@ import (
 	"testing"
 )
 
+func TestDeleteAllCards(t *testing.T) {
+	t.Skipf("Preventing deleting all cards from test customer")
+	err := DeleteAllCards("cus_C3MQXNRknd5e6p")
+	if err != nil {
+		t.Fatalf(err.Error())
+	}
+}
+
 func TestRestServer_UpdateCustomerCard(t *testing.T) {
 	body := strings.NewReader("{\"token\": \"tok_gb\"}")
 	stripe.Key = util.GetTestKey()
@@ -67,12 +75,5 @@ func TestUpdatingCustomerCardWithoutSource(t *testing.T) {
 	if response.Error != "token is required in this request" {
 		t.Errorf("Response was: %s", response.Error)
 		t.Fail()
-	}
-}
-
-func TestDeleteAllCards(t *testing.T) {
-	err := DeleteAllCards("cus_C3MQXNRknd5e6p")
-	if err != nil {
-		t.Fatalf(err.Error())
 	}
 }
