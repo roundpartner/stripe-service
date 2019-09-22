@@ -92,6 +92,10 @@ func Session(customer string, plan []string) *SessionItem {
 	session := stripe.CheckoutSession{}
 	decoder.Decode(&session)
 
+	if session.ID == "" {
+		return &SessionItem{}
+	}
+
 	totalAmount := int64(0)
 
 	planItems := map[int]PlanItem{}
