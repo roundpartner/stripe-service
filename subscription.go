@@ -16,20 +16,20 @@ func (rs *RestServer) GetCustomerSessionV2(w http.ResponseWriter, req *http.Requ
 	id := params["id"]
 
 	decoder := json.NewDecoder(req.Body)
-	var t []string
-	if err := decoder.Decode(&t); err != nil {
+	var plans []string
+	if err := decoder.Decode(&plans); err != nil {
 		StripeError(w, err.Error())
 		return
 	}
 
-	if len(t) == 0 {
+	if len(plans) == 0 {
 		StripeError(w, "no plans provided")
 	}
 
 	sub := &stripe.CheckoutSessionSubscriptionDataParams{
 		Items: []*stripe.CheckoutSessionSubscriptionDataItemsParams{},
 	}
-	for _, plan := range t {
+	for _, plan := range plans {
 		sub.Items = append(sub.Items, &stripe.CheckoutSessionSubscriptionDataItemsParams{
 			Plan: stripe.String(plan),
 		})
