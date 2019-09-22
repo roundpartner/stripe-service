@@ -93,7 +93,7 @@ func Session(customer string, plan []string) *SessionItem {
 	decoder.Decode(&session)
 
 	if session.ID == "" {
-		return &SessionItem{}
+		return nil
 	}
 
 	totalAmount := int64(0)
