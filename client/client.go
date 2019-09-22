@@ -62,7 +62,7 @@ func Subscription(customer string) []SubscriptionItem {
 
 func Session(customer string, plan []string) *SessionItem {
 	client := &http.Client{}
-	url := "http://localhost:57493/customer/" + customer + "/session"
+	url := "http://localhost:57493/v2/customer/" + customer + "/session"
 
 	body, err := json.Marshal(plan)
 	if err != nil {
