@@ -65,6 +65,10 @@ func Subscription(customer string) []*SubscriptionItem {
 	}
 
 	for key := range subscriptions {
+		if subscriptions[key].Items == nil {
+			log.Printf("[INFO] No plans found in subscription")
+			continue
+		}
 		for subkey := range subscriptions[key].Items.Plans {
 			subscriptions[key].Items.Plans[subkey].Plan.PlanId = subscriptions[key].Items.Plans[subkey].Plan.Id
 			subscriptions[key].Items.Plans[subkey].Plan.Id = ""
