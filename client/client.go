@@ -9,12 +9,12 @@ import (
 )
 
 type SubscriptionItem struct {
-	Status           string      `json:"status"`
-	DaysUntilDue     int         `json:"days_until_due"`
-	CurrentPeriodEnd int         `json:"current_period_end"`
-	Plan             PlanItem    `json:"plan,omitempty"`
-	Plans            []PlanItem  `json:"plans"`
-	Items            RawPlanItem `json:"items,omitempty"`
+	Status           string       `json:"status"`
+	DaysUntilDue     int          `json:"days_until_due"`
+	CurrentPeriodEnd int          `json:"current_period_end"`
+	Plan             PlanItem     `json:"plan,omitempty"`
+	Plans            []PlanItem   `json:"plans"`
+	Items            *RawPlanItem `json:"items,omitempty"`
 }
 
 type RawPlanItem struct {
@@ -68,7 +68,7 @@ func Subscription(customer string) []*SubscriptionItem {
 			subscriptions[key].Items.Plans[subkey].Plan.Id = ""
 			subscriptions[key].Plans = append(subscriptions[key].Plans, subscriptions[key].Items.Plans[subkey].Plan)
 		}
-		subscriptions[key].Items = RawPlanItem{}
+		subscriptions[key].Items = nil
 	}
 
 	return subscriptions
