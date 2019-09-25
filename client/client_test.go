@@ -27,6 +27,10 @@ func TestSubscription(t *testing.T) {
 		t.Errorf("Unexpected status for subscription")
 	}
 
+	if subscription[0].CustomerStatus != "Active" {
+		t.Errorf("Unexpected customer status for subscription")
+	}
+
 	if subscription[0].DaysUntilDue != 0 {
 		t.Errorf("Unexpected due date for invoice")
 	}
