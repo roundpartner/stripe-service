@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"time"
 )
 
 func TestWebHook(t *testing.T) {
@@ -68,9 +67,10 @@ func TestRun(t *testing.T) {
 	snsService.Run()
 
 	buf := bytes.NewBufferString("hello world")
+	snsService.WaitGroup.Add(1)
 	snsService.Queue <- buf
 
-	time.Sleep(time.Second)
+	snsService.WaitGroup.Wait()
 
 	if !gock.IsDone() {
 		t.Errorf("Mocked http was not called")

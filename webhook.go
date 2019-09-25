@@ -6,13 +6,20 @@ import (
 	"github.com/aws/aws-sdk-go/service/sns"
 	"log"
 	"net/http"
+	"sync"
 )
 
 func (rs *RestServer) WebHook(w http.ResponseWriter, req *http.Request) {
 	log.Printf("[INFO] [%s] Request received: %s from %s", ServiceName, req.URL.Path, req.RemoteAddr)
 
 	buffer := new(bytes.Buffer)
-	buffer.ReadFrom(req.Body)
+	_, err := buffer.ReadFrom(req.Body)
+	if err != nil {
+		log.Printf("Error reading buffer: %s", err.Error())
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	rs.SNSService.WaitGroup.Add(1)
 	rs.SNSService.Queue <- buffer
 
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
@@ -20,9 +27,10 @@ func (rs *RestServer) WebHook(w http.ResponseWriter, req *http.Request) {
 }
 
 type SNSService struct {
-	Service *sns.SNS
-	Topic   string
-	Queue   chan *bytes.Buffer
+	Service   *sns.SNS
+	Topic     string
+	Queue     chan *bytes.Buffer
+	WaitGroup sync.WaitGroup
 }
 
 func NewSNSService() *SNSService {
@@ -43,8 +51,9 @@ func (snsService *SNSService) Run() {
 			buffer := <-snsService.Queue
 			err := snsService.Push(buffer)
 			if err != nil {
-				log.Printf("%s", err.Error())
+				log.Printf("Pushing webhook error: %s", err.Error())
 			}
+			snsService.WaitGroup.Done()
 		}
 	}()
 }

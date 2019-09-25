@@ -35,6 +35,9 @@ func ListenAndServe(port int) {
 	if nil != err {
 		log.Printf("[INFO] [%s] %s", ServiceName, err.Error())
 	}
+	log.Printf("[INFO] [%s] Waiting for sns service to finish", ServiceName)
+	snsService.WaitGroup.Wait()
+	log.Printf("[INFO] [%s] Server shutting down", ServiceName)
 }
 
 type RestServer struct {
