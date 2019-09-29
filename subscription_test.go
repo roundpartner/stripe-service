@@ -48,3 +48,27 @@ func TestRestServer_GetCustomerSessionV2(t *testing.T) {
 	}
 
 }
+
+func TestRestServer_UpgradeSubscription(t *testing.T) {
+	stripe.Key = util.GetTestKey()
+	if err := util.SetSubscriptionEnvironmentVariables(); err != nil {
+		t.Fatalf("Unable to setup test environment: %s", err.Error())
+	}
+
+	body := `["plan_FrDrMXuQmKGoIP"]`
+
+	rr := httptest.NewRecorder()
+	req, _ := http.NewRequest("POST", "/customer/cus_C3MQXNRknd5e6p/upgrade", bytes.NewBufferString(body))
+	rs := New()
+	rs.router().ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Errorf("wrong error code returned: %d", rr.Code)
+		t.Errorf("body: %s", rr.Body.String())
+	}
+
+	if "application/json; charset=utf-8" != rr.Header().Get("Content-Type") {
+		t.Errorf("wrong content type returned: %s", rr.Header().Get("Content-Type"))
+		t.FailNow()
+	}
+}

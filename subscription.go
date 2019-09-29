@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/gorilla/mux"
 	"github.com/stripe/stripe-go"
 	"github.com/stripe/stripe-go/checkout/session"
@@ -15,15 +16,10 @@ func (rs *RestServer) GetCustomerSessionV2(w http.ResponseWriter, req *http.Requ
 	params := mux.Vars(req)
 	id := params["id"]
 
-	decoder := json.NewDecoder(req.Body)
-	var plans []string
-	if err := decoder.Decode(&plans); err != nil {
+	plans, err := rs.DecodePlans(req)
+	if err != nil {
 		StripeError(w, err.Error())
 		return
-	}
-
-	if len(plans) == 0 {
-		StripeError(w, "no plans provided")
 	}
 
 	sub := &stripe.CheckoutSessionSubscriptionDataParams{
@@ -69,4 +65,32 @@ func (rs *RestServer) CreateSession(customer *stripe.Customer, sub *stripe.Check
 	}
 
 	return session.New(stripeParams)
+}
+
+func (rs *RestServer) DecodePlans(req *http.Request) ([]string, error) {
+	decoder := json.NewDecoder(req.Body)
+	var plans []string
+	if err := decoder.Decode(&plans); err != nil {
+		return plans, err
+	}
+
+	if len(plans) == 0 {
+		return plans, errors.New("no plans provided")
+	}
+
+	return plans, nil
+}
+
+func (rs *RestServer) UpgradeSubscription(w http.ResponseWriter, req *http.Request) {
+
+	plans, err := rs.DecodePlans(req)
+	if err != nil {
+		StripeError(w, err.Error())
+		return
+	}
+
+	js, _ := json.Marshal(plans)
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.WriteHeader(http.StatusOK)
+	w.Write(js)
 }
