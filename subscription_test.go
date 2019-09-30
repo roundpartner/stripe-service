@@ -58,7 +58,7 @@ func TestRestServer_UpgradeSubscription(t *testing.T) {
 	body := `["plan_FrDrMXuQmKGoIP"]`
 
 	rr := httptest.NewRecorder()
-	req, _ := http.NewRequest("POST", "/customer/cus_FspJN56DogyJmY/upgrade", bytes.NewBufferString(body))
+	req, _ := http.NewRequest("PUT", "/customer/cus_FspJN56DogyJmY/subscription", bytes.NewBufferString(body))
 	rs := New()
 	if err := rs.RemovePlans("cus_FspJN56DogyJmY", []string{"plan_FrDrMXuQmKGoIP"}); err != nil {
 		t.Fatalf("Unable to remove plan: %s", err.Error())
@@ -66,7 +66,32 @@ func TestRestServer_UpgradeSubscription(t *testing.T) {
 
 	rs.router().ServeHTTP(rr, req)
 
-	if rr.Code != http.StatusOK {
+	if rr.Code != http.StatusNoContent {
+		t.Errorf("wrong error code returned: %d", rr.Code)
+		t.Errorf("body: %s", rr.Body.String())
+	}
+
+	if "application/json; charset=utf-8" != rr.Header().Get("Content-Type") {
+		t.Errorf("wrong content type returned: %s", rr.Header().Get("Content-Type"))
+		t.FailNow()
+	}
+}
+
+func TestRestServer_DowngradeSubscription(t *testing.T) {
+	stripe.Key = util.GetTestKey()
+	if err := util.SetSubscriptionEnvironmentVariables(); err != nil {
+		t.Fatalf("Unable to setup test environment: %s", err.Error())
+	}
+
+	body := `["plan_FrDrMXuQmKGoIP"]`
+
+	rr := httptest.NewRecorder()
+	req, _ := http.NewRequest("DELETE", "/customer/cus_FspJN56DogyJmY/subscription", bytes.NewBufferString(body))
+	rs := New()
+
+	rs.router().ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusNoContent {
 		t.Errorf("wrong error code returned: %d", rr.Code)
 		t.Errorf("body: %s", rr.Body.String())
 	}

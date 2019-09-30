@@ -129,10 +129,40 @@ func (rs *RestServer) UpgradeSubscription(w http.ResponseWriter, req *http.Reque
 		return
 	}
 
-	js, _ := json.Marshal(plans)
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	w.WriteHeader(http.StatusOK)
-	w.Write(js)
+	w.WriteHeader(http.StatusNoContent)
+}
+
+func (rs *RestServer) DowngradeSubscription(w http.ResponseWriter, req *http.Request) {
+	log.Printf("[INFO] [%s] Request received: %s from %s", ServiceName, req.URL.Path, req.RemoteAddr)
+	params := mux.Vars(req)
+	id := params["id"]
+
+	plans, err := rs.DecodePlans(req)
+	if err != nil {
+		StripeError(w, err.Error())
+		return
+	}
+
+	customer, err := getCustomer(id)
+	if err != nil {
+		StripeError(w, err.Error())
+		return
+	}
+
+	if customer.Subscriptions.TotalCount < 1 {
+		StripeError(w, "no subscriptions found")
+		return
+	}
+
+	err = rs.RemovePlans(customer.ID, plans)
+	if err != nil {
+		StripeError(w, err.Error())
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.WriteHeader(http.StatusNoContent)
 }
 
 func (rs *RestServer) RemovePlans(customer string, plans []string) error {
