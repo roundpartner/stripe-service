@@ -124,6 +124,11 @@ func (rs *RestServer) UpgradeSubscription(w http.ResponseWriter, req *http.Reque
 
 	subscription, err = sub.Update(subscription.ID, subParams)
 
+	if err != nil {
+		StripeError(w, err.Error())
+		return
+	}
+
 	js, _ := json.Marshal(plans)
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
