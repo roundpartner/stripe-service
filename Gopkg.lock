@@ -10,7 +10,7 @@
   version = "v1.1.1"
 
 [[projects]]
-  digest = "1:5cacb7c4b6683d2026939dc2ca851c21ce85766b6b1133e39cb9681d4d797c8a"
+  digest = "1:f2cb1360bbf74cfce1071a9a4d19de0998d961f340ec644c7c5a46f31f59b7ca"
   name = "github.com/aws/aws-sdk-go"
   packages = [
     "aws",
@@ -33,6 +33,7 @@
     "aws/signer/v4",
     "internal/ini",
     "internal/sdkio",
+    "internal/sdkmath",
     "internal/sdkrand",
     "internal/sdkuri",
     "internal/shareddefaults",
@@ -47,8 +48,8 @@
     "service/sts/stsiface",
   ]
   pruneopts = "UT"
-  revision = "fbdf1bd30caaf828d14bd5fed15130417858a723"
-  version = "v1.23.3"
+  revision = "8ed263425377bfd1b72b611e1769d39bad41b3ea"
+  version = "v1.25.1"
 
 [[projects]]
   digest = "1:cbec35fe4d5a4fba369a656a8cd65e244ea2c743007d8f6c1ccb132acf9d1296"
@@ -85,7 +86,7 @@
   revision = "70a07059ae3dbcd2bd82bdc5252c95520445f551"
 
 [[projects]]
-  digest = "1:e25566a3b4bd618bf3bfa308093bb7dda8f4782b874932e9b2d0f54064badd07"
+  digest = "1:85c959dfc1067bc4e35e70c42e92dc2b1c67d31ab03dbe0b204203eedb6ccd04"
   name = "github.com/stripe/stripe-go"
   packages = [
     ".",
@@ -95,10 +96,12 @@
     "customer",
     "form",
     "source",
+    "sub",
+    "subitem",
   ]
   pruneopts = "UT"
-  revision = "9c59aefa4822f9a21e2ea6600b7f00cdc3e5f14a"
-  version = "v62.1.1"
+  revision = "561ef3536fcab2a7cf06f0ede001e34376dc651e"
+  version = "v63.2.2"
 
 [[projects]]
   digest = "1:80d8747c77f6b6c8e77232cd04aa93cbf4489836d47e487566d94e6ecbe23082"
@@ -126,6 +129,8 @@
     "github.com/stripe/stripe-go/checkout/session",
     "github.com/stripe/stripe-go/customer",
     "github.com/stripe/stripe-go/source",
+    "github.com/stripe/stripe-go/sub",
+    "github.com/stripe/stripe-go/subitem",
     "gopkg.in/h2non/gock.v1",
   ]
   solver-name = "gps-cdcl"

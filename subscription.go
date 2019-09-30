@@ -6,6 +6,8 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/stripe/stripe-go"
 	"github.com/stripe/stripe-go/checkout/session"
+	"github.com/stripe/stripe-go/sub"
+	"github.com/stripe/stripe-go/subitem"
 	"log"
 	"net/http"
 	"os"
@@ -82,6 +84,9 @@ func (rs *RestServer) DecodePlans(req *http.Request) ([]string, error) {
 }
 
 func (rs *RestServer) UpgradeSubscription(w http.ResponseWriter, req *http.Request) {
+	log.Printf("[INFO] [%s] Request received: %s from %s", ServiceName, req.URL.Path, req.RemoteAddr)
+	params := mux.Vars(req)
+	id := params["id"]
 
 	plans, err := rs.DecodePlans(req)
 	if err != nil {
@@ -89,8 +94,65 @@ func (rs *RestServer) UpgradeSubscription(w http.ResponseWriter, req *http.Reque
 		return
 	}
 
+	customer, err := getCustomer(id)
+	if err != nil {
+		StripeError(w, err.Error())
+		return
+	}
+
+	if customer.Subscriptions.TotalCount < 1 {
+		StripeError(w, "no subscriptions found")
+		return
+	}
+
+	if customer.Subscriptions.TotalCount > 1 {
+		log.Printf("[INFO] [%s] %s has %d subscription found but expected one", ServiceName, customer.ID, customer.Subscriptions.TotalCount)
+	}
+
+	subscription, err := sub.Get(customer.Subscriptions.Data[0].ID, nil)
+
+	subParams := &stripe.SubscriptionParams{
+		CancelAtPeriodEnd: stripe.Bool(false),
+		Items:             []*stripe.SubscriptionItemsParams{},
+	}
+
+	for _, plan := range plans {
+		subParams.Items = append(subParams.Items, &stripe.SubscriptionItemsParams{
+			Plan: stripe.String(plan),
+		})
+	}
+
+	subscription, err = sub.Update(subscription.ID, subParams)
+
 	js, _ := json.Marshal(plans)
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	w.Write(js)
+}
+
+func (rs *RestServer) RemovePlans(customer string, plans []string) error {
+	for _, plan := range plans {
+		subParams := &stripe.SubscriptionListParams{
+			Customer: customer,
+		}
+		subItems := sub.List(subParams)
+		for subItems.Next() {
+			subItem := subItems.Current().(*stripe.Subscription)
+
+			subItemParams := &stripe.SubscriptionItemListParams{
+				Subscription: stripe.String(subItem.ID),
+			}
+			planItems := subitem.List(subItemParams)
+			for planItems.Next() {
+				planItem := planItems.Current().(*stripe.SubscriptionItem)
+				if planItem.Plan.ID == plan {
+					_, err := subitem.Del(planItem.ID, nil)
+					if err != nil {
+						return err
+					}
+				}
+			}
+		}
+	}
+	return nil
 }

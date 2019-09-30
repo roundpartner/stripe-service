@@ -58,8 +58,12 @@ func TestRestServer_UpgradeSubscription(t *testing.T) {
 	body := `["plan_FrDrMXuQmKGoIP"]`
 
 	rr := httptest.NewRecorder()
-	req, _ := http.NewRequest("POST", "/customer/cus_C3MQXNRknd5e6p/upgrade", bytes.NewBufferString(body))
+	req, _ := http.NewRequest("POST", "/customer/cus_FspJN56DogyJmY/upgrade", bytes.NewBufferString(body))
 	rs := New()
+	if err := rs.RemovePlans("cus_FspJN56DogyJmY", []string{"plan_FrDrMXuQmKGoIP"}); err != nil {
+		t.Fatalf("Unable to remove plan: %s", err.Error())
+	}
+
 	rs.router().ServeHTTP(rr, req)
 
 	if rr.Code != http.StatusOK {
