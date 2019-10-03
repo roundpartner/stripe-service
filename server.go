@@ -57,6 +57,7 @@ func (rs *RestServer) router() *mux.Router {
 	router.HandleFunc("/customer/{id}/subscription", rs.UpgradeSubscription).Methods("PUT")
 	router.HandleFunc("/customer/{id}/subscription", rs.DowngradeSubscription).Methods("DELETE")
 	router.HandleFunc("/customer/{id}/subscription", rs.GetCustomerSubscriptions).Methods("GET")
+	router.HandleFunc("/customer/{id}/cancel", rs.CancelSubscription).Methods("DELETE")
 	router.HandleFunc("/customer", rs.NewCustomer).Methods("POST")
 	router.HandleFunc("/customer/{id}/card", rs.UpdateCustomerCard).Methods("PUT")
 	router.HandleFunc("/reload", rs.ReloadCustomers).Methods("GET")

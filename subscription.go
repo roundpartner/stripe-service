@@ -191,3 +191,41 @@ func (rs *RestServer) RemovePlans(customer string, plans []string) error {
 	}
 	return nil
 }
+
+func (rs *RestServer) CancelSubscription(w http.ResponseWriter, req *http.Request) {
+	log.Printf("[INFO] [%s] Request received: %s from %s", ServiceName, req.URL.Path, req.RemoteAddr)
+
+	params := mux.Vars(req)
+	id := params["id"]
+
+	customer, err := getCustomer(id)
+	if err != nil {
+		StripeError(w, err.Error())
+		return
+	}
+
+	if customer.Subscriptions.TotalCount < 1 {
+		StripeError(w, "no subscriptions found")
+		return
+	}
+
+	if customer.Subscriptions.TotalCount > 1 {
+		log.Printf("[INFO] [%s] %s has %d subscription found but expected one", ServiceName, customer.ID, customer.Subscriptions.TotalCount)
+	}
+
+	subscription, err := sub.Get(customer.Subscriptions.Data[0].ID, nil)
+
+	subParams := &stripe.SubscriptionParams{
+		CancelAtPeriodEnd: stripe.Bool(true),
+	}
+
+	_, err = sub.Update(subscription.ID, subParams)
+
+	if err != nil {
+		StripeError(w, err.Error())
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.WriteHeader(http.StatusNoContent)
+}

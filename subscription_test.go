@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"github.com/roundpartner/stripe-service/util"
 	"github.com/stripe/stripe-go"
+	"github.com/stripe/stripe-go/sub"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -99,5 +100,45 @@ func TestRestServer_DowngradeSubscription(t *testing.T) {
 	if "application/json; charset=utf-8" != rr.Header().Get("Content-Type") {
 		t.Errorf("wrong content type returned: %s", rr.Header().Get("Content-Type"))
 		t.FailNow()
+	}
+}
+
+func TestRestServer_CancelSubscription(t *testing.T) {
+	stripe.Key = util.GetTestKey()
+	if err := util.SetSubscriptionEnvironmentVariables(); err != nil {
+		t.Fatalf("Unable to setup test environment: %s", err.Error())
+	}
+
+	rr := httptest.NewRecorder()
+	req, _ := http.NewRequest("DELETE", "/customer/cus_FspJN56DogyJmY/cancel", nil)
+	rs := New()
+
+	rs.router().ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusNoContent {
+		t.Errorf("wrong error code returned: %d", rr.Code)
+		t.Errorf("body: %s", rr.Body.String())
+	}
+
+	if "application/json; charset=utf-8" != rr.Header().Get("Content-Type") {
+		t.Errorf("wrong content type returned: %s", rr.Header().Get("Content-Type"))
+		t.FailNow()
+	}
+
+	subItem, err := sub.Get("sub_FspWjqCT5ep2VF", nil)
+	if err != nil {
+		t.Fatalf("Error getting subscription: %s", err.Error())
+	}
+
+	if !subItem.CancelAtPeriodEnd {
+		t.Fatalf("Subscription not canceled")
+	}
+
+	subParams := &stripe.SubscriptionParams{
+		CancelAtPeriodEnd: stripe.Bool(false),
+	}
+	_, err = sub.Update("sub_FspWjqCT5ep2VF", subParams)
+	if err != nil {
+		t.Fatalf("Error reactivating subscription: %s", err.Error())
 	}
 }
