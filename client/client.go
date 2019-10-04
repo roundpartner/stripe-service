@@ -3,7 +3,9 @@ package client
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"github.com/stripe/stripe-go"
+	"io"
 	"log"
 	"net/http"
 	"strings"
@@ -51,7 +53,7 @@ func Subscription(customer string) []*SubscriptionItem {
 		return nil
 	}
 	if resp.StatusCode != http.StatusOK {
-		log.Printf("[ERROR] %s", "service returned non ok status")
+		log.Printf("[ERROR] Subscription: %s", "service returned non ok status")
 		return nil
 	}
 	defer resp.Body.Close()
@@ -104,7 +106,7 @@ func Session(customer string, plan []string) *SessionItem {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		log.Printf("[ERROR] %s", "service returned non ok status")
+		log.Printf("[ERROR] Session: %s", "service returned non ok status")
 		return nil
 	}
 
@@ -137,4 +139,71 @@ func Session(customer string, plan []string) *SessionItem {
 		Plan:       planItems,
 		Amount:     totalAmount,
 	}
+}
+
+func Upgrade(customer string, plan []string) error {
+	body, err := json.Marshal(plan)
+	if err != nil {
+		log.Printf("[ERROR] Unable to decode plans: %s", err.Error())
+		return err
+	}
+
+	buf := bytes.NewBuffer(body)
+	err = send("PUT", "/customer/"+customer+"/subscription", buf)
+	if err != nil {
+		log.Printf("[ERROR] Unable to upgrade: %s", err.Error())
+		return err
+	}
+
+	return nil
+}
+
+func Downgrade(customer string, plan []string) error {
+	body, err := json.Marshal(plan)
+	if err != nil {
+		log.Printf("[ERROR] Unable to decode plans: %s", err.Error())
+		return err
+	}
+
+	buf := bytes.NewBuffer(body)
+	err = send("DELETE", "/customer/"+customer+"/subscription", buf)
+	if err != nil {
+		log.Printf("[ERROR] Unable to downgrade: %s", err.Error())
+		return err
+	}
+
+	return nil
+}
+
+func Cancel(customer string) error {
+	err := send("DELETE", "/customer/"+customer+"/cancel", nil)
+	if err != nil {
+		log.Printf("[ERROR] Unable to cancel: %s", err.Error())
+		return err
+	}
+
+	return nil
+}
+
+func send(method, url string, body io.Reader) error {
+	client := &http.Client{}
+	url = "http://localhost:57493" + url
+
+	req, err := http.NewRequest(method, url, body)
+	if err != nil {
+		return err
+	}
+
+	resp, err := client.Do(req)
+	if err != nil {
+		return err
+	}
+
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusNoContent {
+		return errors.New("unexpected response code returned")
+	}
+
+	return nil
 }

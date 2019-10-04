@@ -101,3 +101,56 @@ func TestSessionError(t *testing.T) {
 		t.Errorf("Expected no session to be returned")
 	}
 }
+
+func TestUpgradeSubscription(t *testing.T) {
+	defer gock.Off()
+	gock.New("http://localhost:57493").
+		Put("/customer/cus_12345/subscription").
+		Reply(http.StatusNoContent)
+
+	plan := []string{"plan_12345"}
+	err := Upgrade("cus_12345", plan)
+
+	if !gock.IsDone() {
+		t.Errorf("Mocked http was not called")
+	}
+
+	if err != nil {
+		t.Errorf("Error: %s", err.Error())
+	}
+}
+
+func TestDowngradeSubscription(t *testing.T) {
+	defer gock.Off()
+	gock.New("http://localhost:57493").
+		Delete("/customer/cus_12345/subscription").
+		Reply(http.StatusNoContent)
+
+	plan := []string{"plan_12345"}
+	err := Downgrade("cus_12345", plan)
+
+	if err != nil {
+		t.Errorf("Error: %s", err.Error())
+	}
+
+	if !gock.IsDone() {
+		t.Errorf("Mocked http was not called")
+	}
+}
+
+func TestCancelSubscription(t *testing.T) {
+	defer gock.Off()
+	gock.New("http://localhost:57493").
+		Delete("/customer/cus_12345/cancel").
+		Reply(http.StatusNoContent)
+
+	err := Cancel("cus_12345")
+
+	if err != nil {
+		t.Errorf("Error: %s", err.Error())
+	}
+
+	if !gock.IsDone() {
+		t.Errorf("Mocked http was not called")
+	}
+}
