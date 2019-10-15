@@ -19,6 +19,7 @@ type SubscriptionItem struct {
 	Plan             PlanItem     `json:"plan,omitempty"`
 	Plans            []PlanItem   `json:"plans"`
 	Items            *RawPlanItem `json:"items,omitempty"`
+	Cancelled        bool         `json:"cancel_at_period_end"`
 }
 
 type RawPlanItem struct {
