@@ -171,6 +171,21 @@ func (rs *RestServer) UpdateDiscount(w http.ResponseWriter, req *http.Request) {
 	customerParams := &stripe.CustomerParams{}
 	customerParams.Coupon = stripe.String(coupon)
 
+	cust, err := getCustomer(id)
+	if err != nil {
+		StripeError(w, err.Error())
+		return
+	}
+
+	if cust.Discount != nil {
+		log.Printf("[INFO] [%s] Customer %s already has a discount so %s will not be applied", ServiceName, id, coupon)
+		js, _ := json.Marshal(cust)
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		w.WriteHeader(http.StatusOK)
+		w.Write(js)
+		return
+	}
+
 	updatedCustomer, err := customer.Update(id, customerParams)
 	if err != nil {
 		StripeError(w, err.Error())
