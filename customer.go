@@ -164,6 +164,7 @@ func (rs *RestServer) UpdateCustomer(w http.ResponseWriter, req *http.Request) {
 }
 
 func (rs *RestServer) UpdateDiscount(w http.ResponseWriter, req *http.Request) {
+	log.Printf("[INFO] [%s] Request received: %s from %s", ServiceName, req.URL.Path, req.RemoteAddr)
 	params := mux.Vars(req)
 	id := params["id"]
 	coupon := params["coupon"]
@@ -206,6 +207,7 @@ type CustomerMeta struct {
 var customerMetaList map[string]*CustomerMeta
 
 func (rs *RestServer) ReloadCustomers(w http.ResponseWriter, req *http.Request) {
+	log.Printf("[INFO] [%s] Request received: %s from %s", ServiceName, req.URL.Path, req.RemoteAddr)
 	loadCustomers()
 
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")

@@ -82,6 +82,7 @@ type ChargeRequest struct {
 }
 
 func (rs *RestServer) Charge(w http.ResponseWriter, req *http.Request) {
+	log.Printf("[INFO] [%s] Request received: %s from %s", ServiceName, req.URL.Path, req.RemoteAddr)
 	decoder := json.NewDecoder(req.Body)
 	t := &ChargeRequest{
 		Currency: "gbp",

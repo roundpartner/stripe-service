@@ -16,7 +16,7 @@ type messageJson struct {
 }
 
 func StripeError(w http.ResponseWriter, msg string) {
-	log.Printf("stripe error: %s", msg)
+	log.Printf("[ERROR] [%s] Stripe: %s", ServiceName, msg)
 	b := bytes.NewBufferString(msg).Bytes()
 	var i interface{}
 	json.Unmarshal(b, &i)
@@ -25,12 +25,12 @@ func StripeError(w http.ResponseWriter, msg string) {
 }
 
 func InternalError(w http.ResponseWriter, msg string) {
-	log.Printf("server error: %s", msg)
+	log.Printf("[ERROR] [%s] Server: %s", ServiceName, msg)
 	jsonError(w, msg, http.StatusInternalServerError)
 }
 
 func BadRequest(w http.ResponseWriter, msg string) {
-	log.Printf("client error: %s", msg)
+	log.Printf("[ERROR] [%s] Client: %s", ServiceName, msg)
 	jsonError(w, msg, http.StatusBadRequest)
 }
 
