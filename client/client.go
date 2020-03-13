@@ -40,6 +40,34 @@ type SessionItem struct {
 	Amount     int64            `json:"amount"`
 }
 
+func Customer(customer string) *stripe.Customer {
+	client := &http.Client{}
+	url := "http://localhost:57493/customer/" + customer + ""
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		log.Printf("[ERROR] %s", err.Error())
+		return nil
+	}
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Printf("[ERROR] %s", err.Error())
+		return nil
+	}
+	if resp.StatusCode != http.StatusOK {
+		log.Printf("[ERROR] Subscription: %s", "service returned non ok status")
+		return nil
+	}
+	defer resp.Body.Close()
+
+	var customerItem stripe.Customer
+	decoder := json.NewDecoder(resp.Body)
+	if err := decoder.Decode(&customerItem); err != nil {
+		log.Printf("[ERROR] Decode error: %s", err.Error())
+		return nil
+	}
+	return &customerItem
+}
+
 func Subscription(customer string) []*SubscriptionItem {
 	client := &http.Client{}
 	url := "http://localhost:57493/customer/" + customer + "/subscription"

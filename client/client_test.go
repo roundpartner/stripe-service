@@ -6,6 +6,24 @@ import (
 	"testing"
 )
 
+func TestCustomer(t *testing.T) {
+	defer gock.Off()
+	gock.New("http://localhost:57493").
+		Get("/customer/cus_12345").
+		Reply(http.StatusOK).
+		BodyString(`{"address":{"city":"","country":"","line1":"","line2":"","postal_code":"","state":""},"balance":-9000,"created":1581030246,"currency":"gbp","default_source":null,"deleted":false,"delinquent":false,"description":"test customer","discount":null,"email":"nobody@mailinator.com","id":"cus_12345","invoice_prefix":"ABCDEFG","invoice_settings":{"custom_fields":null,"default_payment_method":null,"footer":""},"livemode":false,"metadata":{"account":"1","user":"1"},"name":"","phone":"","preferred_locales":[],"shipping":null,"sources":{"has_more":false,"total_count":0,"url":"/v1/customers/cus_12345/sources","data":[]},"subscriptions":{"has_more":false,"total_count":0,"url":"/v1/customers/cus_12345/subscriptions","data":[]},"tax_exempt":"none","tax_ids":{"has_more":false,"total_count":0,"url":"/v1/customers/cus_12345/tax_ids","data":[]},"account_balance":-9000,"tax_info":null,"tax_info_verification":null}`)
+
+	customer := Customer("cus_12345")
+
+	if !gock.IsDone() {
+		t.Errorf("Mocked http was not called")
+	}
+
+	if customer.ID != "cus_12345" {
+		t.Errorf("Unexpected customer id")
+	}
+}
+
 func TestSubscription(t *testing.T) {
 	defer gock.Off()
 	gock.New("http://localhost:57493").
