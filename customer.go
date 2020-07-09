@@ -112,6 +112,8 @@ func (rs *RestServer) NewCustomer(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	log.Printf("[INFO] [%s] Adding token to customer %s", ServiceName, newCustomer.ID)
+
 	card, err := card.New(&stripe.CardParams{
 		Customer: &newCustomer.ID,
 		Token:    &t.Token,
