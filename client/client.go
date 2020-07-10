@@ -41,13 +41,41 @@ type SessionItem struct {
 }
 
 func Customer(customer string) *stripe.Customer {
-	client := &http.Client{}
 	url := "http://localhost:57493/customer/" + customer + ""
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		log.Printf("[ERROR] %s", err.Error())
 		return nil
 	}
+	return requestCustomer(req)
+}
+
+type CustomerRequest struct {
+	Account  string `json:"account"`
+	User     string `json:"user"`
+	Email    string `json:"email"`
+	Desc     string `json:"desc"`
+	Token    string `json:"token"`
+	Discount string `json:"discount"`
+}
+
+func CreateCustomer(customer *CustomerRequest) *stripe.Customer {
+	buf, err := json.Marshal(customer)
+	if err != nil {
+		log.Printf("[ERROR] %s", err.Error())
+		return nil
+	}
+	url := "http://localhost:57493/customer"
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(buf))
+	if err != nil {
+		log.Printf("[ERROR] %s", err.Error())
+		return nil
+	}
+	return requestCustomer(req)
+}
+
+func requestCustomer(req *http.Request) *stripe.Customer {
+	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
 		log.Printf("[ERROR] %s", err.Error())
