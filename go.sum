@@ -26,6 +26,7 @@ github.com/roundpartner/go v0.1.0/go.mod h1:YuSoQHRwtg8ZewbXowzZQ0rSP/MNKCyxGINn
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/testify v1.4.0/go.mod h1:j7eGeouHqKxXV5pUuKE4zz7dFj8WfuZ+81PSLYec5m4=
 github.com/stretchr/testify v1.5.1/go.mod h1:5W2xD1RspED5o8YsWQXVCued0rvSQ+mT+I5cxcmMvtA=
+github.com/stripe/stripe-go v1.0.3 h1:RHgK2FUKawVNBPJ15pNM4IWkEVVCg5Ju3xK5QZNhTwY=
 github.com/stripe/stripe-go v63.2.2+incompatible h1:H/R35+0E0ieYes67IrZ+EqoGnlgtAAXhR4T2/ZoFsH4=
 github.com/stripe/stripe-go v63.2.2+incompatible/go.mod h1:A1dQZmO/QypXmsL0T8axYZkSN/uA/T/A64pfKdBAMiY=
 github.com/stripe/stripe-go v70.15.0+incompatible h1:hNML7M1zx8RgtepEMlxyu/FpVPrP7KZm1gPFQquJQvM=
