@@ -10,7 +10,7 @@ import (
 )
 
 func (rs *RestServer) WebHook(w http.ResponseWriter, req *http.Request) {
-	log.Printf("[INFO] [%s] Request received: %s from %s", ServiceName, req.URL.Path, req.RemoteAddr)
+	log.Printf("[INFO] [%s] Request received: %s %s from %s", ServiceName, req.Method, req.URL.Path, req.RemoteAddr)
 
 	buffer := new(bytes.Buffer)
 	_, err := buffer.ReadFrom(req.Body)

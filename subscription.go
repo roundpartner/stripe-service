@@ -14,7 +14,7 @@ import (
 )
 
 func (rs *RestServer) GetCustomerSessionV2(w http.ResponseWriter, req *http.Request) {
-	log.Printf("[INFO] [%s] Request received: %s from %s", ServiceName, req.URL.Path, req.RemoteAddr)
+	log.Printf("[INFO] [%s] Request received: %s %s from %s", ServiceName, req.Method, req.URL.Path, req.RemoteAddr)
 	params := mux.Vars(req)
 	id := params["id"]
 
@@ -84,7 +84,7 @@ func (rs *RestServer) DecodePlans(req *http.Request) ([]string, error) {
 }
 
 func (rs *RestServer) UpgradeSubscription(w http.ResponseWriter, req *http.Request) {
-	log.Printf("[INFO] [%s] Request received: %s from %s", ServiceName, req.URL.Path, req.RemoteAddr)
+	log.Printf("[INFO] [%s] Request received: %s %s from %s", ServiceName, req.Method, req.URL.Path, req.RemoteAddr)
 	params := mux.Vars(req)
 	id := params["id"]
 
@@ -134,7 +134,7 @@ func (rs *RestServer) UpgradeSubscription(w http.ResponseWriter, req *http.Reque
 }
 
 func (rs *RestServer) DowngradeSubscription(w http.ResponseWriter, req *http.Request) {
-	log.Printf("[INFO] [%s] Request received: %s from %s", ServiceName, req.URL.Path, req.RemoteAddr)
+	log.Printf("[INFO] [%s] Request received: %s %s from %s", ServiceName, req.Method, req.URL.Path, req.RemoteAddr)
 	params := mux.Vars(req)
 	id := params["id"]
 
@@ -193,7 +193,7 @@ func (rs *RestServer) RemovePlans(customer string, plans []string) error {
 }
 
 func (rs *RestServer) CancelSubscription(w http.ResponseWriter, req *http.Request) {
-	log.Printf("[INFO] [%s] Request received: %s from %s", ServiceName, req.URL.Path, req.RemoteAddr)
+	log.Printf("[INFO] [%s] Request received: %s %s from %s", ServiceName, req.Method, req.URL.Path, req.RemoteAddr)
 
 	params := mux.Vars(req)
 	id := params["id"]
