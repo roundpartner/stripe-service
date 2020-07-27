@@ -20,7 +20,7 @@ type SubscriptionItem struct {
 	Plans            []PlanItem   `json:"plans"`
 	Items            *RawPlanItem `json:"items,omitempty"`
 	Cancelled        bool         `json:"cancel_at_period_end"`
-	LatestInvoice    string       `json:"latest_invoice"`
+	LatestInvoice    string
 }
 
 type RawPlanItem struct {

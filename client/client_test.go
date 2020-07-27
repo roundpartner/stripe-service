@@ -103,6 +103,21 @@ func TestSubscription(t *testing.T) {
 	if subscription[0].Plans[0].PlanId != "plan_12345" {
 		t.Errorf("Unexpected plan id")
 	}
+}
+
+func TestSubscriptionWithInvoice(t *testing.T) {
+	t.Skipf("Invoice is not returned")
+	defer gock.Off()
+	gock.New("http://localhost:57493").
+		Get("/customer/cus_12345/subscription").
+		Reply(http.StatusOK).
+		BodyString(`[{"status":"active","days_until_due": 0,"current_period_end":1571246262,"items":{"data":[{"plan":{"id":"plan_12345","nickname":"Plan"}}]},"latest_invoice":"in_1Gy1ntE6Cs3pyAhaV6Yw6636"}]`)
+
+	subscription := Subscription("cus_12345")
+
+	if !gock.IsDone() {
+		t.Errorf("Mocked http was not called")
+	}
 
 	if subscription[0].LatestInvoice != "in_1Gy1ntE6Cs3pyAhaV6Yw6636" {
 		t.Errorf("Expected next invoice to be in_1Gy1ntE6Cs3pyAhaV6Yw6636 but got %s instead", subscription[0].LatestInvoice)
