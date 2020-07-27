@@ -41,6 +41,43 @@ type SessionItem struct {
 	Amount     int64            `json:"amount"`
 }
 
+type CustomerList struct {
+	Items []*stripe.Customer
+}
+
+func Customers() *CustomerList {
+	url := "http://localhost:57493/customer"
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		log.Printf("[ERROR] %s", err.Error())
+		return nil
+	}
+	return requestCustomers(req)
+}
+
+func requestCustomers(req *http.Request) *CustomerList {
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Printf("[ERROR] %s", err.Error())
+		return nil
+	}
+	if resp.StatusCode != http.StatusOK {
+		log.Printf("[ERROR] Subscription: %s", "service returned non ok status")
+		return nil
+	}
+	defer resp.Body.Close()
+
+	customers := &CustomerList{}
+
+	decoder := json.NewDecoder(resp.Body)
+	if err := decoder.Decode(&customers.Items); err != nil {
+		log.Printf("[ERROR] Decode error: %s", err.Error())
+		return nil
+	}
+	return customers
+}
+
 func Customer(customer string) *stripe.Customer {
 	url := "http://localhost:57493/customer/" + customer + ""
 	req, err := http.NewRequest("GET", url, nil)

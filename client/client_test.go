@@ -6,6 +6,26 @@ import (
 	"testing"
 )
 
+func TestCustomers(t *testing.T) {
+	defer gock.Off()
+	gock.New("http://localhost:57493").
+		Get("/customer").
+		Reply(http.StatusOK).
+		BodyString(`[{"account_balance":0,"business_vat_id":"","currency":"","created":1506114908,"default_source":null,"deleted":false,"delinquent":false,"description":"First test","discount":null,"email":"nobody@mailinator.com","id":"cus_12345","livemode":false,"metadata":{},"shipping":null,"sources":{"total_count":0,"has_more":false,"url":"/v1/customers/cus_12345/sources","data":[]},"subscriptions":{"total_count":0,"has_more":false,"url":"/v1/customers/cus_12345/subscriptions","data":[]}}]`)
+
+	customers := Customers()
+	if !gock.IsDone() {
+		t.Errorf("Mocked http was not called")
+	}
+	if len(customers.Items) != 1 {
+		t.Errorf("Unexpected number of customers returned: got %d but expected 1", len(customers.Items))
+	}
+	customer := customers.Items[0]
+	if customer.ID != "cus_12345" {
+		t.Errorf("Unexpected customer id")
+	}
+}
+
 func TestCustomer(t *testing.T) {
 	defer gock.Off()
 	gock.New("http://localhost:57493").
