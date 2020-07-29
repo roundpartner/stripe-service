@@ -20,7 +20,18 @@ type SubscriptionItem struct {
 	Plans            []PlanItem   `json:"plans"`
 	Items            *RawPlanItem `json:"items,omitempty"`
 	Cancelled        bool         `json:"cancel_at_period_end"`
-	LatestInvoice    string
+	LatestInvoice    *InvoiceItem `json:"latest_invoice"`
+}
+
+type InvoiceItem struct {
+	AmountDue       int64  `json:"amount_due"`
+	AmountPaid      int64  `json:"amount_paid"`
+	AmountRemaining int64  `json:"amount_remaining"`
+	DueDate         int64  `json:"due_date"`
+	ID              string `json:"id"`
+	Paid            bool   `json:"paid"`
+	Status          string `json:"status"`
+	Total           int64  `json:"total"`
 }
 
 type RawPlanItem struct {

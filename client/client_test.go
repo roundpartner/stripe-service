@@ -1,6 +1,9 @@
 package client
 
 import (
+	"bytes"
+	"encoding/json"
+	"github.com/stripe/stripe-go"
 	"gopkg.in/h2non/gock.v1"
 	"net/http"
 	"testing"
@@ -68,7 +71,7 @@ func TestSubscription(t *testing.T) {
 	gock.New("http://localhost:57493").
 		Get("/customer/cus_12345/subscription").
 		Reply(http.StatusOK).
-		BodyString(`[{"status":"active","days_until_due": 0,"current_period_end":1571246262,"items":{"data":[{"plan":{"id":"plan_12345","nickname":"Plan"}}]},"latest_invoice":"in_1Gy1ntE6Cs3pyAhaV6Yw6636"}]`)
+		BodyString(`[{"status":"active","days_until_due": 0,"current_period_end":1571246262,"items":{"data":[{"plan":{"id":"plan_12345","nickname":"Plan"}}]},"latest_invoice":null}]`)
 
 	subscription := Subscription("cus_12345")
 
@@ -106,12 +109,29 @@ func TestSubscription(t *testing.T) {
 }
 
 func TestSubscriptionWithInvoice(t *testing.T) {
-	t.Skipf("Invoice is not returned")
+	sub := []stripe.Subscription{
+		{
+			ID:               "sub_12345",
+			Status:           "active",
+			DaysUntilDue:     0,
+			CurrentPeriodEnd: 1571246262,
+			Plan: &stripe.Plan{
+				ID:       "plan_12345",
+				Nickname: "Plan",
+			},
+			LatestInvoice: &stripe.Invoice{
+				ID: "in_1Gy1ntE6Cs3pyAhaV6Yw6636",
+			},
+		},
+	}
+	buf, _ := json.Marshal(sub)
+	body := bytes.NewBuffer(buf)
+
 	defer gock.Off()
 	gock.New("http://localhost:57493").
 		Get("/customer/cus_12345/subscription").
 		Reply(http.StatusOK).
-		BodyString(`[{"status":"active","days_until_due": 0,"current_period_end":1571246262,"items":{"data":[{"plan":{"id":"plan_12345","nickname":"Plan"}}]},"latest_invoice":"in_1Gy1ntE6Cs3pyAhaV6Yw6636"}]`)
+		Body(body)
 
 	subscription := Subscription("cus_12345")
 
@@ -119,8 +139,8 @@ func TestSubscriptionWithInvoice(t *testing.T) {
 		t.Errorf("Mocked http was not called")
 	}
 
-	if subscription[0].LatestInvoice != "in_1Gy1ntE6Cs3pyAhaV6Yw6636" {
-		t.Errorf("Expected next invoice to be in_1Gy1ntE6Cs3pyAhaV6Yw6636 but got %s instead", subscription[0].LatestInvoice)
+	if subscription[0].LatestInvoice.ID != "in_1Gy1ntE6Cs3pyAhaV6Yw6636" {
+		t.Errorf("Expected next invoice to be in_1Gy1ntE6Cs3pyAhaV6Yw6636 but got %s instead", subscription[0].LatestInvoice.ID)
 	}
 }
 
