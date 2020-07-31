@@ -1,5 +1,5 @@
-FROM alpine
+FROM golang
 
-COPY stripe-service stripe-service
+COPY stripe-service /bin/stripe-service
 
-CMD ./stripe-service
+CMD ["stripe-service"]
