@@ -123,6 +123,21 @@ func CreateCustomer(customer *CustomerRequest) *stripe.Customer {
 	return requestCustomer(req)
 }
 
+func UpdateCustomer(customer string, params *CustomerRequest) *stripe.Customer {
+	buf, err := json.Marshal(params)
+	if err != nil {
+		log.Printf("[ERROR] %s", err.Error())
+		return nil
+	}
+	url := "http://localhost:57493/customer/" + customer
+	req, err := http.NewRequest("PUT", url, bytes.NewBuffer(buf))
+	if err != nil {
+		log.Printf("[ERROR] %s", err.Error())
+		return nil
+	}
+	return requestCustomer(req)
+}
+
 func requestCustomer(req *http.Request) *stripe.Customer {
 	client := &http.Client{}
 	resp, err := client.Do(req)
