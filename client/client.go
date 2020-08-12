@@ -138,6 +138,16 @@ func UpdateCustomer(customer string, params *CustomerRequest) *stripe.Customer {
 	return requestCustomer(req)
 }
 
+func UpdateCustomerDiscount(customer, discount string) *stripe.Customer {
+	url := "http://localhost:57493/customer/" + customer + "/discount/" + discount
+	req, err := http.NewRequest("PUT", url, nil)
+	if err != nil {
+		log.Printf("[ERROR] %s", err.Error())
+		return nil
+	}
+	return requestCustomer(req)
+}
+
 func requestCustomer(req *http.Request) *stripe.Customer {
 	client := &http.Client{}
 	resp, err := client.Do(req)
