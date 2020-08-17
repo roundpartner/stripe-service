@@ -37,7 +37,7 @@ func ListenAndServe(port int) {
 	}
 	log.Printf("[INFO] [%s] Waiting for sns service to finish", ServiceName)
 	snsService.WaitGroup.Wait()
-	log.Printf("[INFO] [%s] Server shutting down", ServiceName)
+	log.Printf("[INFO] [%s] Server shutting down gracefully", ServiceName)
 }
 
 type RestServer struct {
