@@ -1,4 +1,3 @@
-[![Build Status](https://travis-ci.org/roundpartner/stripe-service.svg?branch=master)](https://travis-ci.org/roundpartner/stripe-service)
 [![Go Report Card](https://goreportcard.com/badge/github.com/roundpartner/stripe-service)](https://goreportcard.com/report/github.com/roundpartner/stripe-service)
 # Stripe Micro Service
 A Micro Service for Stripe Payments in Go
