@@ -133,10 +133,7 @@ func (rs *RestServer) NewCustomer(w http.ResponseWriter, req *http.Request) {
 
 func delete(id string) bool {
 	_, err := customer.Del(id, nil)
-	if nil != err {
-		return false
-	}
-	return true
+	return nil == err
 }
 
 func (rs *RestServer) UpdateCustomer(w http.ResponseWriter, req *http.Request) {
@@ -250,7 +247,7 @@ func get(id string) *CustomerMeta {
 	customerMutex.RLock()
 	c, ok := customerMetaList[id]
 	customerMutex.RUnlock()
-	if ok == false {
+	if !ok {
 		return nil
 	}
 	return c

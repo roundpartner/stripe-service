@@ -31,7 +31,7 @@ func GetSession() *session.Session {
 
 func GetTopic() (string, error) {
 	topic, exists := os.LookupEnv("AWS_SNS_TOPIC")
-	if exists == false {
+	if !exists {
 		log.Printf("[ERROR] [%s] %s", ServiceName, "Topic not set")
 		return "", errors.New("topic not set")
 	}
