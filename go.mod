@@ -4,7 +4,7 @@ go 1.13
 
 require (
 	github.com/artyom/autoflags v1.1.1
-	github.com/aws/aws-sdk-go v1.33.0
+	github.com/aws/aws-sdk-go v1.34.0
 	github.com/gorilla/mux v1.7.4
 	github.com/roundpartner/go v0.1.0
 	github.com/stripe/stripe-go v70.15.0+incompatible
